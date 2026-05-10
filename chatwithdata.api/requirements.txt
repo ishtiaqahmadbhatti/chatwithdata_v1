@@ -106,3 +106,71 @@ starlette>=0.40.0,<1.0.0
 pillow-heif
  
 fastmcp==3.2.4
+
+#-------------------
+
+# This file lists the dependencies for the LangChain project. It includes core components, integrations with various LLM providers, and utilities for document loading, embedding generation, and more.
+langchain
+# Core components and utilities
+langchain-core
+# Community-contributed modules and integrations
+langchain-community
+# Document Loaders and Text Splitters
+langchain-text-splitters
+# LLMs and Embeddings
+langchain-classic
+# Experimental features and utilities
+langchain-experimental
+
+# LangGraph
+langgraph
+
+# Hugging Face Integration
+langchain-huggingface
+transformers
+huggingface-hub
+
+# PyTorch (Required by transformers for model loading)
+torch
+
+
+# Machine Learning Utilities
+numpy
+scikit-learn
+
+
+# Graph Visualization
+grandalf
+
+# Database and Vector Store
+langchain-chroma
+
+# Sentence Transformers for embedding generation
+sentence-transformers
+
+# Wikipedia API
+wikipedia
+
+# FAISS for efficient similarity search
+faiss-cpu
+
+# DuckDuckGo Search API
+ddgs
+
+# Vectorless Page Indexing
+pageindex
+
+langgraph-checkpoint-sqlite
+ollama
+langchain-ollama
+
+langsmith
+
+langchain-mcp-adapters
+
+
+aiosqlite
+
+langgraph-checkpoint-postgres
+
+psycopg[binary,pool]
