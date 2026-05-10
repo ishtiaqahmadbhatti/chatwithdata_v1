@@ -8,8 +8,12 @@ import os
 import warnings
 import logging
 
+# Fix for Protobuf descriptor error (often triggered by ChromaDB or Google API)
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
+
 # Suppress all Python-level warnings globally
 warnings.filterwarnings("ignore")
+
 
 # Silence noisy third-party loggers
 logging.getLogger("weasyprint").setLevel(logging.CRITICAL)

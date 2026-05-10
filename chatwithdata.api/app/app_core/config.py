@@ -74,6 +74,13 @@ class Settings(BaseSettings):
     
     # YouTube Data API v3 (for comment extraction)
     youtube_api_key: Optional[str] = None
+
+    # Ollama / RAG Settings
+    ollama_base_url: str = "http://localhost:11434"
+    ollama_llm_model: str = "gemma4:latest"
+    ollama_embed_model: str = "qwen3-embedding:latest"
+    chroma_persist_dir: str = "chroma_db"
+    protocol_buffers_python_implementation: Optional[str] = None
     
     @property
     def get_database_url(self) -> str:
