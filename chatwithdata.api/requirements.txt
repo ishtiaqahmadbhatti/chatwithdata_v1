@@ -1,0 +1,106 @@
+# ============================================================
+# SmartConverter API - Requirements
+# ============================================================
+
+# FastAPI and server
+# NOTE: Capped at <0.133.0 due to fastapi-mail==1.6.2 requiring starlette<1.0.0
+# fastapi>=0.133.0 requires starlette>=0.46.0 with no upper cap (pulls starlette 1.0.0+)
+fastapi>=0.132.1,<0.133.0
+fastapi-mail>=1.6.2
+uvicorn[standard]>=0.42.0
+python-multipart>=0.0.22
+
+# Database and Authentication
+sqlalchemy>=2.0.48
+alembic>=1.18.4
+psycopg2-binary>=2.9.11
+bcrypt>=5.0.0
+python-jose[cryptography]==3.5.0
+authlib==1.6.9
+itsdangerous>=2.2.0
+email-validator>=2.3.0
+redis>=7.4.0
+python-dotenv==1.2.2
+user-agents==2.2.0
+
+# Configuration and validation
+pydantic>=2.12.5
+pydantic-settings>=2.13.1
+
+# PDF manipulation
+PyPDF2>=3.0.1
+pypdf>=6.9.2
+pymupdf>=1.27.2
+pdf2docx==0.5.12
+pdf2image>=1.17.0
+reportlab>=4.4.10
+weasyprint>=68.1
+
+
+# Office documents
+python-docx>=1.2.0
+python-pptx>=1.0.2
+openpyxl>=3.1.5
+xlsxwriter>=3.2.9
+odfpy>=1.4.1
+
+# Image processing
+# NOTE: Pinned to <12.0 due to moviepy==2.2.1 dependency constraint (pillow>=9.2.0,<12.0)
+Pillow>=11.3.0,<12.0
+cairosvg>=2.9.0
+img2pdf>=0.6.3
+imageio>=2.37.3
+opencv-python>=4.13.0
+
+# HTML and web processing
+beautifulsoup4>=4.14.3
+markdown>=3.10.2
+html2text>=2025.4.15
+requests>=2.33.0
+
+# Video and audio processing
+moviepy==2.2.1
+ffmpeg-python>=0.2.0
+imageio-ffmpeg>=0.6.0
+pydub>=0.25.1
+soundfile>=0.13.1
+SpeechRecognition>=3.15.2
+yt-dlp>=2026.3.17
+
+# Selenium (website screenshotting - optional)
+selenium>=4.41.0
+webdriver-manager>=4.0.2
+
+# OCR
+pytesseract>=0.3.13
+
+# Subtitle processing
+pysrt>=1.1.2
+webvtt-py>=0.5.1
+deep-translator>=1.11.4
+
+# eBook processing
+ebooklib>=0.20
+
+# Data processing
+pandas>=3.0.1
+PyYAML>=6.0.3
+# NOTE: Standalone 'bson' package is broken on Python 3.14+ (uses removed pkgutil.find_loader)
+# Use pymongo instead — it ships its own bson module (from bson import ObjectId, etc. still works)
+pymongo>=4.16.0
+
+# File formatting / validation
+jsonschema>=4.26.0
+xmlschema>=4.3.1
+lxml>=6.0.2
+
+# AWS Integration
+boto3>=1.42.77
+
+# Middlewares / sessions
+# NOTE: Capped at <1.0.0 due to fastapi-mail==1.6.2 requiring starlette<1.0.0 (latest stable: 0.52.1)
+starlette>=0.40.0,<1.0.0
+
+pillow-heif
+ 
+fastmcp==3.2.4

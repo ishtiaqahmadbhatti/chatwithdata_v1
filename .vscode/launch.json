@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Start App (Debug)",
+            "type": "debugpy",
+            "request": "launch",
+            "python": "${workspaceFolder}/chatwithdata.api/.venv/Scripts/python.exe",
+            "program": "${workspaceFolder}/chatwithdata.api/start_app.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/chatwithdata.api",
+            "justMyCode": false
+        },
+        {
+            "name": "Python: FastAPI (uvicorn)",
+            "type": "debugpy",
+            "request": "launch",
+            "python": "${workspaceFolder}/chatwithdata.api/.venv/Scripts/python.exe",
+            "module": "uvicorn",
+            "args": [
+                "app.main:app",
+                "--reload",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "8000"
+            ],
+            "cwd": "${workspaceFolder}/chatwithdata.api",
+            "jinja": true,
+            "justMyCode": false
+        }
+    ]
+}

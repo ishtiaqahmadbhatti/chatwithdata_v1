@@ -1,0 +1,60 @@
+# =============================================================================
+# AWS Lambda Container Image — SmartConverter API
+# FastAPI/Python 3.11-slim + awslambdaric + Mangum + all conversion libs
+# =============================================================================
+
+FROM python:3.11-slim
+
+WORKDIR /var/task
+
+# System dependencies needed by conversion libraries
+# NOTE: libgl1-mesa-glx was renamed to libgl1 in Debian trixie
+# NOTE: libreoffice removed - too large (~1GB) for Lambda image size limit
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    poppler-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
+
+# Install Lambda runtime + Mangum adapter
+RUN pip install --no-cache-dir "awslambdaric>=2.0.0" "mangum>=0.17.0"
+
+# Copy and install app requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir --default-timeout=600 --retries 5 -r requirements.txt
+
+# Install static ffmpeg via pip (NO apt-get — avoids ISP/Fastly CDN blocks)
+RUN pip install --no-cache-dir "imageio-ffmpeg>=0.5.1"
+
+# Put ffmpeg binary in PATH
+RUN python3 -c "import imageio_ffmpeg,shutil,os; src=imageio_ffmpeg.get_ffmpeg_exe(); shutil.copy2(src,'/usr/local/bin/ffmpeg'); os.chmod('/usr/local/bin/ffmpeg',0o755); probe=os.path.join(os.path.dirname(src),'ffprobe'); shutil.copy2(probe,'/usr/local/bin/ffprobe') if os.path.exists(probe) else os.symlink('/usr/local/bin/ffmpeg','/usr/local/bin/ffprobe'); print('ffmpeg ready!')"
+
+# Verify ffmpeg works
+RUN ffmpeg -version 2>&1 | head -1
+
+# Copy application code
+COPY app/ ./app/
+COPY deploy/lambda_handler.py ./lambda_handler.py
+
+# Lambda writable storage lives in /tmp
+ENV UPLOADS_DIR=/tmp/uploads \
+    OUTPUTS_DIR=/tmp/outputs \
+    TEMP_DIR=/tmp/temp \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/var/task
+
+RUN mkdir -p /tmp/uploads /tmp/outputs /tmp/temp
+
+# awslambdaric = Lambda Runtime Interface Client
+ENTRYPOINT ["/usr/local/bin/python", "-m", "awslambdaric"]
+CMD ["lambda_handler.handler"]

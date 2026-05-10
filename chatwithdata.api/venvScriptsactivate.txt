@@ -1,0 +1,7 @@
+uv init
+uv venv
+.venv\Scripts\activate
+uv add -r requirements.txt
+python start_app.py
+
+D:\smartconverter_v1\smartconverter.api>npx @modelcontextprotocol/inspector python mcpserver.py
