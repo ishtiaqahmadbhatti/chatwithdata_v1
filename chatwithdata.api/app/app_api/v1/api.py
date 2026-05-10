@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.app_api.v1.endpoints import health, json_conversion, website_conversion, csv_conversion, xml_conversion, office_documents_conversion, image_conversion, ocr_conversion, subtitle_conversion, text_conversion, file_formatter, ebook_conversion, video_conversion, audio_conversion, pdf_conversion, markdown_conversion, user_list, auth, guest, subscription, history, helpdesk, s3_upload
+from app.app_api.v1.endpoints import health, json_conversion, website_conversion, csv_conversion, xml_conversion, office_documents_conversion, image_conversion, ocr_conversion, subtitle_conversion, text_conversion, file_formatter, ebook_conversion, video_conversion, audio_conversion, pdf_conversion, markdown_conversion, user_list, auth, guest, subscription, history, helpdesk, s3_upload, youtube_tools
 
 api_router = APIRouter()
 
@@ -29,6 +29,7 @@ api_router.include_router(subscription.router, prefix="/subscription", tags=["Su
 api_router.include_router(history.router, prefix="/history", tags=["History"])
 api_router.include_router(helpdesk.router, prefix="/helpdesk", tags=["Helpdesk"])
 api_router.include_router(s3_upload.router, prefix="/s3", tags=["S3 Storage"])
+api_router.include_router(youtube_tools.router, prefix="/youtubetools", tags=["YouTube Tools"])
 
 
 

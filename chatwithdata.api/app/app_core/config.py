@@ -72,6 +72,9 @@ class Settings(BaseSettings):
     facebook_client_id: Optional[str] = None
     facebook_client_secret: Optional[str] = None
     
+    # YouTube Data API v3 (for comment extraction)
+    youtube_api_key: Optional[str] = None
+    
     @property
     def get_database_url(self) -> str:
         """Get the database URL, either from environment or constructed from settings."""

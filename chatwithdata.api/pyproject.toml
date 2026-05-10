@@ -66,5 +66,6 @@ dependencies = [
     "webvtt-py>=0.5.1",
     "xlsxwriter>=3.2.9",
     "xmlschema>=4.3.1",
+    "youtube-transcript-api>=0.6.3",
     "yt-dlp>=2026.3.17",
 ]
