@@ -81,6 +81,12 @@ class Settings(BaseSettings):
     ollama_embed_model: str = "qwen3-embedding:latest"
     chroma_persist_dir: str = "chroma_db"
     protocol_buffers_python_implementation: Optional[str] = None
+
+    # LangSmith / LangChain Tracing
+    langchain_tracing_v2: Optional[str] = None
+    langchain_endpoint: Optional[str] = None
+    langchain_api_key: Optional[str] = None
+    langchain_project: Optional[str] = None
     
     @property
     def get_database_url(self) -> str:

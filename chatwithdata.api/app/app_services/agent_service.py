@@ -53,33 +53,6 @@ def node_retrieve(state: AgentState) -> AgentState:
     return {**state, "documents": docs}
 
 
-# ── Node: Grade Documents ──────────────────────────────────────────────────────
-_GRADE_PROMPT = ChatPromptTemplate.from_messages([
-    ("system",
-     "You are a relevance grader. Given a user question and a retrieved document, "
-     "decide if the document is relevant to answering the question.\n"
-     "Reply with ONLY one word: 'yes' or 'no'."),
-    ("human", "Question: {question}\n\nDocument:\n{document}"),
-])
-
-def node_grade_docs(state: AgentState) -> AgentState:
-    """Filter retrieved docs to only those relevant to the question."""
-    llm = _get_llm(temperature=0)
-    grader = _GRADE_PROMPT | llm | StrOutputParser()
-
-    relevant = []
-    for doc in state["documents"]:
-        score = grader.invoke({
-            "question": state["question"],
-            "document": doc.page_content,
-        }).strip().lower()
-        if score.startswith("yes"):
-            relevant.append(doc)
-
-    logger.info(f"[RAG] Grading: {len(relevant)}/{len(state['documents'])} docs are relevant")
-    return {**state, "documents": relevant}
-
-
 # ── Node: Generate Answer ──────────────────────────────────────────────────────
 _GENERATE_PROMPT = ChatPromptTemplate.from_messages([
     ("system",
@@ -108,55 +81,15 @@ def node_generate(state: AgentState) -> AgentState:
     return {**state, "generation": answer}
 
 
-# ── Node: Rewrite Query ────────────────────────────────────────────────────────
-_REWRITE_PROMPT = ChatPromptTemplate.from_messages([
-    ("system",
-     "You are a query optimizer. Rewrite the following question to be more specific "
-     "and better suited for retrieving relevant information from a YouTube video's "
-     "transcript, metadata, and comments."),
-    ("human", "Original question: {question}\n\nRewritten question:"),
-])
-
-def node_rewrite(state: AgentState) -> AgentState:
-    """Rewrite the query when retrieved docs are not relevant (fallback)."""
-    llm = _get_llm(temperature=0.5)
-    chain = _REWRITE_PROMPT | llm | StrOutputParser()
-    new_question = chain.invoke({"question": state["question"]}).strip()
-    logger.info(f"[RAG] Rewriting query: '{state['question']}' → '{new_question}'")
-    return {**state, "question": new_question, "retries": state.get("retries", 0) + 1}
-
-
-# ── Conditional Edges ──────────────────────────────────────────────────────────
-def decide_after_grading(state: AgentState) -> Literal["generate", "rewrite", "no_docs"]:
-    """Route after grading: generate if we have relevant docs, rewrite if not."""
-    if state["documents"]:
-        return "generate"
-    if state.get("retries", 0) >= 2:
-        return "no_docs"   # Give up after 2 retries
-    return "rewrite"
-
-
 # ── Build Graph ────────────────────────────────────────────────────────────────
 def _build_rag_graph() -> StateGraph:
     graph = StateGraph(AgentState)
 
     graph.add_node("retrieve",    node_retrieve)
-    graph.add_node("grade_docs",  node_grade_docs)
     graph.add_node("generate",    node_generate)
-    graph.add_node("rewrite",     node_rewrite)
 
     graph.set_entry_point("retrieve")
-    graph.add_edge("retrieve",   "grade_docs")
-    graph.add_conditional_edges(
-        "grade_docs",
-        decide_after_grading,
-        {
-            "generate": "generate",
-            "rewrite":  "rewrite",
-            "no_docs":  "generate",   # generate will handle empty docs gracefully
-        }
-    )
-    graph.add_edge("rewrite",  "retrieve")   # retry loop
+    graph.add_edge("retrieve", "generate")
     graph.add_edge("generate", END)
 
     return graph.compile()

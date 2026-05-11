@@ -1,14 +1,15 @@
 """
-RAG Service — Handles document ingestion and retrieval from ChromaDB.
-Uses Ollama embeddings (qwen3-embedding) and stores per-video collections.
+RAG Service — Handles document ingestion and retrieval using FAISS.
+Uses Ollama embeddings (qwen3-embedding) and stores per-video indices on disk.
 """
 
 import logging
 import os
+import shutil
 from typing import List, Dict, Any, Optional
 
 from langchain_core.documents import Document
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_ollama import OllamaEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from app.app_core.config import settings
@@ -17,18 +18,19 @@ logger = logging.getLogger(__name__)
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
-def _chroma_dir() -> str:
-    return settings.chroma_persist_dir
+def _faiss_dir() -> str:
+    # Use the chroma setting name or a hardcoded faiss_db if we want to change it
+    return getattr(settings, "chroma_persist_dir", "faiss_db").replace("chroma", "faiss")
+
+def _video_dir(video_id: str) -> str:
+    """Directory where a specific video's FAISS index is saved."""
+    return os.path.join(_faiss_dir(), f"yt_{video_id}")
 
 def _get_embeddings() -> OllamaEmbeddings:
     return OllamaEmbeddings(
         model=settings.ollama_embed_model,
         base_url=settings.ollama_base_url,
     )
-
-def _collection_name(video_id: str) -> str:
-    """ChromaDB collection name per video (max 63 chars, alphanumeric + underscore)."""
-    return f"yt_{video_id}"
 
 # ── Text splitter ──────────────────────────────────────────────────────────────
 _splitter = RecursiveCharacterTextSplitter(
@@ -111,8 +113,8 @@ def _youtube_data_to_documents(video_data: Dict[str, Any]) -> List[Document]:
 
 def ingest_youtube_data(video_data: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Ingest YouTube video data into ChromaDB.
-    Creates (or overwrites) a per-video collection.
+    Ingest YouTube video data into FAISS.
+    Creates (or overwrites) a per-video local index.
     """
     video_id = video_data.get("video_id")
     if not video_id:
@@ -122,32 +124,27 @@ def ingest_youtube_data(video_data: Dict[str, Any]) -> Dict[str, Any]:
     if not documents:
         raise ValueError("No content found to ingest (transcript, metadata, or comments are all empty).")
 
-    collection = _collection_name(video_id)
-    chroma_dir = _chroma_dir()
+    v_dir = _video_dir(video_id)
     embeddings = _get_embeddings()
 
-    # Delete existing collection for a fresh ingest
-    try:
-        import chromadb
-        client = chromadb.PersistentClient(path=chroma_dir)
-        existing = [c.name for c in client.list_collections()]
-        if collection in existing:
-            client.delete_collection(collection)
-            logger.info(f"Deleted existing ChromaDB collection: {collection}")
-    except Exception as e:
-        logger.warning(f"Could not clean existing collection: {e}")
+    # Delete existing index directory for a fresh ingest
+    if os.path.exists(v_dir):
+        shutil.rmtree(v_dir)
+        logger.info(f"Deleted existing FAISS index at: {v_dir}")
 
-    vectorstore = Chroma.from_documents(
+    # Build FAISS index in memory
+    vectorstore = FAISS.from_documents(
         documents=documents,
-        embedding=embeddings,
-        collection_name=collection,
-        persist_directory=chroma_dir,
+        embedding=embeddings
     )
+    
+    # Save to disk
+    vectorstore.save_local(v_dir)
 
-    logger.info(f"Ingested {len(documents)} chunks into ChromaDB collection '{collection}'")
+    logger.info(f"Ingested {len(documents)} chunks into FAISS index at '{v_dir}'")
     return {
         "video_id":       video_id,
-        "collection":     collection,
+        "collection":     v_dir,
         "chunks_ingested": len(documents),
         "title":          video_data.get("metadata", {}).get("title", ""),
     }
@@ -158,43 +155,52 @@ def ingest_youtube_data(video_data: Dict[str, Any]) -> Dict[str, Any]:
 # ──────────────────────────────────────────────────────────────────────────────
 
 def get_retriever(video_id: str, k: int = 6):
-    """Return a LangChain retriever for a given video's ChromaDB collection."""
-    vectorstore = Chroma(
-        collection_name=_collection_name(video_id),
-        embedding_function=_get_embeddings(),
-        persist_directory=_chroma_dir(),
+    """Return a LangChain retriever for a given video's FAISS index."""
+    v_dir = _video_dir(video_id)
+    if not os.path.exists(v_dir):
+        raise ValueError(f"No ingested data found for video_id: {video_id}")
+        
+    vectorstore = FAISS.load_local(
+        folder_path=v_dir,
+        embeddings=_get_embeddings(),
+        allow_dangerous_deserialization=True # Required by LangChain to load local FAISS .pkl files
     )
     return vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": k})
 
 
 def list_sessions() -> List[Dict[str, Any]]:
-    """List all ingested video sessions from ChromaDB."""
+    """List all ingested video sessions from FAISS directory."""
     try:
-        import chromadb
-        client = chromadb.PersistentClient(path=_chroma_dir())
+        base_dir = _faiss_dir()
+        if not os.path.exists(base_dir):
+            return []
+            
         sessions = []
-        for col in client.list_collections():
-            if col.name.startswith("yt_"):
-                video_id = col.name[3:]
+        for d in os.listdir(base_dir):
+            if d.startswith("yt_"):
+                video_id = d[3:]
+                # We can't easily get the chunk count without loading the whole index into memory
+                # So we'll just say the session exists
                 sessions.append({
                     "video_id":   video_id,
-                    "collection": col.name,
-                    "chunks":     col.count(),
+                    "collection": d,
+                    "status":     "available",
                 })
         return sessions
     except Exception as e:
-        logger.error(f"Error listing ChromaDB sessions: {e}")
+        logger.error(f"Error listing FAISS sessions: {e}")
         return []
 
 
 def delete_session(video_id: str) -> bool:
-    """Delete a video's ChromaDB collection."""
+    """Delete a video's FAISS index directory."""
     try:
-        import chromadb
-        client = chromadb.PersistentClient(path=_chroma_dir())
-        client.delete_collection(_collection_name(video_id))
-        logger.info(f"Deleted ChromaDB session for video {video_id}")
-        return True
+        v_dir = _video_dir(video_id)
+        if os.path.exists(v_dir):
+            shutil.rmtree(v_dir)
+            logger.info(f"Deleted FAISS session for video {video_id}")
+            return True
+        return False
     except Exception as e:
         logger.error(f"Error deleting session {video_id}: {e}")
         return False

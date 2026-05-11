@@ -12,7 +12,7 @@ build/
 develop-eggs/
 dist/
 downloads/
-chroma_db
+faiss_db/
 eggs/
 .eggs/
 lib/
