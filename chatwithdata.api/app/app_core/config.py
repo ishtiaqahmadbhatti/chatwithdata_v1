@@ -79,7 +79,7 @@ class Settings(BaseSettings):
     ollama_base_url: str = "http://localhost:11434"
     ollama_llm_model: str = "gemma4:latest"
     ollama_embed_model: str = "qwen3-embedding:latest"
-    chroma_persist_dir: str = "chroma_db"
+    faiss_persist_dir: str = "faiss_db"
     protocol_buffers_python_implementation: Optional[str] = None
 
     # LangSmith / LangChain Tracing

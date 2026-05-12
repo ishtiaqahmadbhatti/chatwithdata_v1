@@ -2,13 +2,11 @@
 Agent Service — LangGraph Agentic RAG Pipeline.
 
 Graph flow:
-  retrieve → grade_docs → [generate | rewrite_query → retrieve]
+  retrieve → [generate]
 
 Nodes:
-  - retrieve     : fetch top-k docs from ChromaDB for the question
-  - grade_docs   : LLM checks if retrieved docs are actually relevant
+  - retrieve     : fetch top-k docs from FAISS for the question
   - generate     : LLM produces final answer from relevant docs
-  - rewrite      : LLM rewrites the question if docs were irrelevant (fallback)
 """
 
 import logging

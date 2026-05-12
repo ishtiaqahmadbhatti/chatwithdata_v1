@@ -2,7 +2,7 @@
 RAG Tools API Endpoints
 
 Endpoints:
-  POST /api/v1/ragtools/ingest         — Ingest YouTube video data into ChromaDB
+  POST /api/v1/ragtools/ingest         — Ingest YouTube video data into FAISS
   POST /api/v1/ragtools/query          — Query a video using Agentic RAG
   GET  /api/v1/ragtools/sessions       — List all ingested video sessions
   DELETE /api/v1/ragtools/sessions/{id} — Delete a session
@@ -47,7 +47,7 @@ async def ingest_video(
     db: Session = Depends(get_db)
 ):
     """
-    Ingest YouTube video data into ChromaDB for RAG queries.
+    Ingest YouTube video data into FAISS for RAG queries.
 
     **Body**: Simply paste the entire JSON response from `/youtubetools/extract-data`.
     """
@@ -136,7 +136,7 @@ async def get_sessions():
 
 @router.delete("/sessions/{video_id}")
 async def remove_session(video_id: str):
-    """Delete a video's ChromaDB collection to free up space."""
+    """Delete a video's FAISS index to free up space."""
     deleted = delete_session(video_id)
     if deleted:
         return {"success": True, "message": f"Session for video '{video_id}' deleted."}

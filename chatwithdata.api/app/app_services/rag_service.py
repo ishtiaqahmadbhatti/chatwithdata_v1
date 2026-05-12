@@ -19,8 +19,7 @@ logger = logging.getLogger(__name__)
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
 def _faiss_dir() -> str:
-    # Use the chroma setting name or a hardcoded faiss_db if we want to change it
-    return getattr(settings, "chroma_persist_dir", "faiss_db").replace("chroma", "faiss")
+    return settings.faiss_persist_dir
 
 def _video_dir(video_id: str) -> str:
     """Directory where a specific video's FAISS index is saved."""
