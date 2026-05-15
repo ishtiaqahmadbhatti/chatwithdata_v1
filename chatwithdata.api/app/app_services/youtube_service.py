@@ -28,11 +28,47 @@ class YouTubeService:
         return None
 
     @staticmethod
-    def _fetch_comments_via_api(video_id: str, max_results: int = 100) -> List[Dict]:
+    def _fetch_all_replies(youtube, parent_id: str, max_replies: int = 50) -> List[Dict]:
+        """Fetch all replies for a specific comment thread."""
+        replies = []
+        try:
+            request = youtube.comments().list(
+                part="snippet",
+                parentId=parent_id,
+                maxResults=min(max_replies, 100),
+                textFormat="plainText"
+            )
+            while request and len(replies) < max_replies:
+                response = request.execute()
+                for item in response.get("items", []):
+                    snippet = item["snippet"]
+                    replies.append({
+                        "author": snippet.get("authorDisplayName"),
+                        "text": snippet.get("textDisplay"),
+                        "like_count": snippet.get("likeCount", 0),
+                        "published_at": snippet.get("publishedAt"),
+                    })
+                
+                next_page = response.get("nextPageToken")
+                if next_page and len(replies) < max_replies:
+                    request = youtube.comments().list(
+                        part="snippet",
+                        parentId=parent_id,
+                        maxResults=min(max_replies - len(replies), 100),
+                        textFormat="plainText",
+                        pageToken=next_page
+                    )
+                else:
+                    break
+        except Exception as e:
+            logger.error(f"Error fetching replies for {parent_id}: {e}")
+        return replies
+
+    @staticmethod
+    def _fetch_comments_via_api(video_id: str, max_results: int = 50) -> List[Dict]:
         """
         Fetch comments using YouTube Data API v3.
-        Requires YOUTUBE_API_KEY in .env.
-        Returns empty list gracefully if API key is missing or an error occurs.
+        Includes all replies for each top-level comment.
         """
         api_key = settings.youtube_api_key
         if not api_key or api_key == "your-youtube-data-api-v3-key-here":
@@ -55,14 +91,24 @@ class YouTubeService:
             while request and len(comments) < max_results:
                 response = request.execute()
                 for item in response.get("items", []):
-                    top = item["snippet"]["topLevelComment"]["snippet"]
-                    comments.append({
-                        "author": top.get("authorDisplayName"),
-                        "text": top.get("textDisplay"),
-                        "like_count": top.get("likeCount", 0),
-                        "published_at": top.get("publishedAt"),
-                        "reply_count": item["snippet"].get("totalReplyCount", 0),
-                    })
+                    # 1. Top-level comment
+                    top_snippet = item["snippet"]["topLevelComment"]["snippet"]
+                    reply_count = item["snippet"].get("totalReplyCount", 0)
+                    
+                    comment_obj = {
+                        "author": top_snippet.get("authorDisplayName"),
+                        "text": top_snippet.get("textDisplay"),
+                        "like_count": top_snippet.get("likeCount", 0),
+                        "published_at": top_snippet.get("publishedAt"),
+                        "reply_count": reply_count,
+                        "replies": []
+                    }
+
+                    # 2. Fetch ALL replies for this thread if they exist
+                    if reply_count > 0:
+                        comment_obj["replies"] = YouTubeService._fetch_all_replies(youtube, item["id"])
+
+                    comments.append(comment_obj)
 
                 # Paginate if needed
                 next_page = response.get("nextPageToken")
@@ -78,7 +124,7 @@ class YouTubeService:
                 else:
                     break
 
-            logger.info(f"Fetched {len(comments)} comments via YouTube Data API v3 for {video_id}")
+            logger.info(f"Fetched {len(comments)} comment threads (with all replies) via YouTube Data API v3 for {video_id}")
             return comments
 
         except Exception as e:

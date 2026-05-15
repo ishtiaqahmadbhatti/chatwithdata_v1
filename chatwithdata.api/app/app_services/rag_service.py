@@ -92,6 +92,15 @@ def _youtube_data_to_documents(video_data: Dict[str, Any]) -> List[Document]:
             likes  = c.get("like_count", 0)
             if text:
                 comment_lines.append(f"[{author} | 👍{likes}]: {text}")
+                
+                # Include nested replies if they exist
+                replies = c.get("replies", [])
+                for r in replies:
+                    r_text   = r.get("text", "").strip()
+                    r_author = r.get("author", "Anonymous")
+                    r_likes  = r.get("like_count", 0)
+                    if r_text:
+                        comment_lines.append(f"  └─ [{r_author} | 👍{r_likes}]: {r_text}")
 
         if comment_lines:
             docs.extend(_splitter.create_documents(
