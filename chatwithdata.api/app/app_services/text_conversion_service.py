@@ -1,5 +1,6 @@
 import os
 import io
+import asyncio
 from typing import Optional, Dict, Any, List, Tuple
 from docx import Document
 from pptx import Presentation
@@ -8,6 +9,7 @@ import pysrt
 import webvtt
 from app.app_core.exceptions import FileProcessingError
 from app.app_services.file_service import FileService
+import edge_tts
 
 
 class TextConversionService:
@@ -16,6 +18,57 @@ class TextConversionService:
     # Supported input formats
     SUPPORTED_INPUT_FORMATS = {
         'DOCX', 'DOC', 'PPTX', 'PPT', 'PDF', 'SRT', 'VTT', 'TXT'
+    }
+    
+    # Popular Edge TTS voices
+    POPULAR_VOICES = {
+        # English (US)
+        "female_us_aria": "en-US-AriaNeural",
+        "female_us_jenny": "en-US-JennyNeural",
+        "female_us_emma": "en-US-EmmaNeural",
+        "male_us_guy": "en-US-GuyNeural",
+        "male_us_andrew": "en-US-AndrewNeural",
+        "male_us_brian": "en-US-BrianNeural",
+        "male_us_christopher": "en-US-ChristopherNeural",
+        "male_us_eric": "en-US-EricNeural",
+        
+        # English (UK)
+        "female_uk_sonia": "en-GB-SoniaNeural",
+        "female_uk_libby": "en-GB-LibbyNeural",
+        "male_uk_thomas": "en-GB-ThomasNeural",
+        "male_uk_ryan": "en-GB-RyanNeural",
+        
+        # Urdu & Hindi (Expert)
+        "urdu_male": "ur-PK-AsadNeural",
+        "urdu_female": "ur-PK-UzmaNeural",
+        "hindi_male": "hi-IN-MadhurNeural",
+        "hindi_female": "hi-IN-SwaraNeural",
+        
+        # Arabic
+        "arabic_male": "ar-SA-HamedNeural",
+        "arabic_female": "ar-SA-ZariyahNeural",
+        
+        # Spanish
+        "spanish_male": "es-ES-AlvaroNeural",
+        "spanish_female": "es-ES-ElviraNeural",
+        
+        # French
+        "french_male": "fr-FR-HenriNeural",
+        "french_female": "fr-FR-DeniseNeural",
+        
+        # German
+        "german_male": "de-DE-ConradNeural",
+        "german_female": "de-DE-KatjaNeural",
+
+        # Chinese
+        "chinese_male": "zh-CN-YunxiNeural",
+        "chinese_female": "zh-CN-XiaoxiaoNeural",
+        
+        # Aliases for convenience
+        "female_us": "en-US-AriaNeural",
+        "male_us": "en-US-GuyNeural",
+        "female_uk": "en-GB-SoniaNeural",
+        "male_uk": "en-GB-ThomasNeural"
     }
     
     @staticmethod
@@ -236,6 +289,78 @@ class TextConversionService:
         except Exception as e:
             raise FileProcessingError(f"VTT to text conversion failed: {str(e)}")
     
+    @staticmethod
+    async def text_to_speech(input_path: str, output_filename: Optional[str] = None, language: str = "en", voice: Optional[str] = None) -> str:
+        """Convert document/text to speech (MP3) using edge-tts for high quality voices."""
+        try:
+            if not os.path.exists(input_path):
+                raise FileProcessingError(f"Input file not found: {input_path}")
+            
+            ext = os.path.splitext(input_path)[1].lower()
+            text = ""
+            temp_txt_path = None
+            
+            # Extract text based on file extension
+            if ext == '.txt':
+                with open(input_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    text = f.read()
+            elif ext == '.docx':
+                temp_txt_path = TextConversionService.word_to_text(input_path)
+            elif ext == '.pdf':
+                temp_txt_path = TextConversionService.pdf_to_text(input_path)
+            elif ext in ['.pptx', '.ppt']:
+                temp_txt_path = TextConversionService.powerpoint_to_text(input_path)
+            elif ext == '.srt':
+                temp_txt_path = TextConversionService.srt_to_text(input_path)
+            elif ext == '.vtt':
+                temp_txt_path = TextConversionService.vtt_to_text(input_path)
+            else:
+                # Try to read as plain text if unknown extension
+                try:
+                    with open(input_path, 'r', encoding='utf-8', errors='ignore') as f:
+                        text = f.read()
+                except Exception:
+                    raise FileProcessingError(f"Unsupported file type for text-to-speech: {ext}")
+
+            # If we used a converter, read the resulting text file
+            if temp_txt_path:
+                with open(temp_txt_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    text = f.read()
+                # Cleanup temp text file
+                if os.path.exists(temp_txt_path):
+                    os.remove(temp_txt_path)
+
+            if not text.strip():
+                raise FileProcessingError("No text found in the input file to convert to speech.")
+
+            # Generate output path
+            if output_filename and output_filename.strip():
+                output_path, _ = FileService.generate_output_path_with_filename(
+                    output_filename.strip(), default_extension=".mp3"
+                )
+            else:
+                output_path = FileService.get_output_path(input_path, ".mp3")
+            
+            # Determine voice
+            # If voice is a key in POPULAR_VOICES, use the value
+            # Otherwise, use the voice string directly or fallback to Aria
+            selected_voice = TextConversionService.POPULAR_VOICES.get(voice, voice) or "en-US-AriaNeural"
+            
+            # Convert text to speech using edge-tts
+            communicate = edge_tts.Communicate(text, selected_voice)
+            await communicate.save(output_path)
+            
+            return output_path
+            
+        except Exception as e:
+            # Cleanup temp text file on error if it exists
+            if 'temp_txt_path' in locals() and temp_txt_path and os.path.exists(temp_txt_path):
+                os.remove(temp_txt_path)
+            
+            if isinstance(e, FileProcessingError):
+                raise e
+            raise FileProcessingError(f"Text to speech conversion failed: {str(e)}")
+
     @staticmethod
     def get_supported_formats() -> List[str]:
         """Get list of supported input formats."""

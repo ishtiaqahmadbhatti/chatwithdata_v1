@@ -174,3 +174,5 @@ aiosqlite
 langgraph-checkpoint-postgres
 
 psycopg[binary,pool]
+
+edge-tts

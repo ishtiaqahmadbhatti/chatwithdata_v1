@@ -1,4 +1,6 @@
 import os
+import inspect
+import tempfile
 from fastapi import APIRouter, File, UploadFile, HTTPException, Depends, Form, Query, Request, BackgroundTasks
 from fastapi.responses import FileResponse
 from typing import Optional
@@ -15,6 +17,7 @@ from app.app_core.exceptions import (
     create_error_response
 )
 from app.app_services.file_service import FileService
+from app.app_core.config import settings
 
 router = APIRouter()
 
@@ -24,8 +27,11 @@ async def _handle_text_conversion(
     db: Session,
     file: Optional[UploadFile] = None,
     file_key: Optional[str] = None,
+    text: Optional[str] = None,
     tool_name: str = "text-conversion",
     output_filename: Optional[str] = None,
+    output_extension: str = ".txt",
+    **kwargs
 ) -> ConversionResponse:
     """Helper to handle generic text conversion."""
     input_path: Optional[str] = None
@@ -38,8 +44,18 @@ async def _handle_text_conversion(
         user_id = await get_user_id(request, db)
 
         # Standardized input handling
-        input_type = tool_name.split("-")[0] if "-" in tool_name else "document"
-        input_path, input_filename, input_size = FileService.get_file_input(file, file_key, input_type)
+        if text:
+            # If text is provided directly, save it to a temp file
+            temp_dir = settings.upload_dir
+            if not os.path.exists(temp_dir): os.makedirs(temp_dir)
+            fd, input_path = tempfile.mkstemp(suffix=".txt", dir=temp_dir)
+            with os.fdopen(fd, 'w', encoding='utf-8') as f:
+                f.write(text)
+            input_filename = "direct_text.txt"
+            input_size = len(text.encode('utf-8'))
+        else:
+            input_type = tool_name.split("-")[0] if "-" in tool_name else "document"
+            input_path, input_filename, input_size = FileService.get_file_input(file, file_key, input_type)
         
         # Initial log
         log = ConversionLogService.log_conversion(
@@ -59,14 +75,18 @@ async def _handle_text_conversion(
         desired_name = (output_filename or input_filename).strip()
         output_path_final, final_filename = FileService.generate_output_path_with_filename(
             desired_name,
-            default_extension=".txt",
+            default_extension=output_extension,
         )
         
         # Dispatch to correct service method
         method_name = tool_name.replace("-", "_")
         if hasattr(TextConversionService, method_name):
             method = getattr(TextConversionService, method_name)
-            result_path = method(input_path, output_filename=final_filename)
+            # Handle both sync and async methods
+            if inspect.iscoroutinefunction(method):
+                result_path = await method(input_path, output_filename=final_filename, **kwargs)
+            else:
+                result_path = method(input_path, output_filename=final_filename, **kwargs)
             output_path = result_path
         else:
             raise UnsupportedFileTypeError(f"Unsupported tool: {tool_name}")
@@ -83,16 +103,15 @@ async def _handle_text_conversion(
             log_id=log_id,
             status="success",
             output_filename=final_filename,
-            output_file_type="txt"
+            output_file_type=output_extension.lstrip(".")
         )
         
         success = True
         return ConversionResponse(
             success=True,
-            message="Document converted to text successfully",
+            message=f"Operation {tool_name} completed successfully",
             output_filename=final_filename,
-            # download_url=f"/api/v1/textconversiontools/download/{final_filename}"
-            download_url=f"/download/{final_filename}"
+            download_url=f"/api/v1/textconversiontools/download/{final_filename}"
         )
         
     except (FileProcessingError, UnsupportedFileTypeError, FileSizeExceededError) as e:
@@ -114,7 +133,7 @@ async def convert_word_to_text(
     db: Session = Depends(get_db)
 ):
     """Convert Word document to text."""
-    return await _handle_text_conversion(request, db, file, file_key, "word-to-text", output_filename)
+    return await _handle_text_conversion(request, db, file, file_key, tool_name="word-to-text", output_filename=output_filename)
 
 
 @router.post("/powerpoint-to-text", response_model=ConversionResponse)
@@ -126,7 +145,7 @@ async def convert_powerpoint_to_text(
     db: Session = Depends(get_db)
 ):
     """Convert PowerPoint presentation to text."""
-    return await _handle_text_conversion(request, db, file, file_key, "powerpoint-to-text", output_filename)
+    return await _handle_text_conversion(request, db, file, file_key, tool_name="powerpoint-to-text", output_filename=output_filename)
 
 
 @router.post("/pdf-to-text", response_model=ConversionResponse)
@@ -138,7 +157,7 @@ async def convert_pdf_to_text(
     db: Session = Depends(get_db)
 ):
     """Convert PDF document to text."""
-    return await _handle_text_conversion(request, db, file, file_key, "pdf-to-text", output_filename)
+    return await _handle_text_conversion(request, db, file, file_key, tool_name="pdf-to-text", output_filename=output_filename)
 
 
 @router.post("/srt-to-text", response_model=ConversionResponse)
@@ -150,7 +169,7 @@ async def convert_srt_to_text(
     db: Session = Depends(get_db)
 ):
     """Convert SRT subtitle file to text."""
-    return await _handle_text_conversion(request, db, file, file_key, "srt-to-text", output_filename)
+    return await _handle_text_conversion(request, db, file, file_key, tool_name="srt-to-text", output_filename=output_filename)
 
 
 @router.post("/vtt-to-text", response_model=ConversionResponse)
@@ -162,7 +181,39 @@ async def convert_vtt_to_text(
     db: Session = Depends(get_db)
 ):
     """Convert VTT subtitle file to text."""
-    return await _handle_text_conversion(request, db, file, file_key, "vtt-to-text", output_filename)
+    return await _handle_text_conversion(request, db, file, file_key, tool_name="vtt-to-text", output_filename=output_filename)
+
+
+@router.post("/text-to-speech", response_model=ConversionResponse)
+async def convert_text_to_speech(
+    request: Request,
+    file: Optional[UploadFile] = File(None),
+    file_key: Optional[str] = Form(None),
+    text: Optional[str] = Form(None),
+    output_filename: Optional[str] = Form(None),
+    language: str = Form("en"),
+    voice: Optional[str] = Form(None),
+    db: Session = Depends(get_db)
+):
+    """Convert text or document to speech (MP3) with voice selection. Accepts direct text input."""
+    # Validation: at least one of file, file_key, or text must be provided
+    if not any([file, file_key, text]):
+        raise HTTPException(status_code=400, detail="At least one of 'file', 'file_key', or 'text' must be provided.")
+
+    return await _handle_text_conversion(
+        request, db, file, file_key, text=text, tool_name="text-to-speech", 
+        output_filename=output_filename, output_extension=".mp3", language=language, voice=voice
+    )
+
+
+@router.get("/voices")
+async def get_available_voices():
+    """Get list of popular neural voices with their aliases."""
+    return {
+        "success": True,
+        "voices": TextConversionService.POPULAR_VOICES,
+        "message": "Available voices retrieved successfully"
+    }
 
 
 @router.get("/supported-formats")
