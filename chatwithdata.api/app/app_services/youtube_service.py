@@ -154,6 +154,7 @@ class YouTubeService:
             'skip_download': True,
             'no_check_certificate': True,
             'ignoreerrors': True,
+            'noplaylist': True,
             'http_headers': {
                 'User-Agent': (
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
@@ -167,6 +168,9 @@ class YouTubeService:
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url, download=False)
+                if not info:
+                    raise ValueError("Failed to extract video metadata. YouTube might be blocking the request or the video is unavailable.")
+                
                 result["metadata"] = {
                     "title": info.get("title"),
                     "description": info.get("description"),
@@ -277,6 +281,8 @@ class YouTubeService:
             "no_warnings": True,
             "ffmpeg_location": ffmpeg_path,
             "no_check_certificate": True,
+            "noplaylist": True,
+            "ignoreerrors": True,
             "http_headers": {
                 "User-Agent": (
                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -310,6 +316,8 @@ class YouTubeService:
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
+            if not info:
+                raise ValueError("Failed to download video. YouTube might be blocking the request (Bot detection) or the URL is invalid.")
             video_title = info.get("title", "youtube_video")
 
         # Find the downloaded file (temp_base prefix)
