@@ -1,0 +1,78 @@
+<app-file-conversion-ui title="JSON Formatter" description="Beautify and format your JSON with proper indentation."
+    sourceIcon="fas fa-code" targetIcon="fas fa-align-left" allowedExtensions=".json"
+    allowedExtensionsText="Supports .json files" convertButtonText="Format JSON" [selectedFile]="selectedFile"
+    [isConverting]="isConverting" [conversionStatus]="statusMessage" [uploadProgress]="uploadProgress"
+    [conversionResult]="conversionResult" [disableFileUpload]="useTextInput" [keepContentVisible]="true"
+    (fileSelected)="onFileSelected($event)" (convert)="convert()" (reset)="reset()" (download)="saveFile()">
+    
+    <!-- Input Method Tabs -->
+    <div top-options class="tabs-container">
+        <div class="tabs-wrapper">
+            <button class="tab-btn" [class.active]="!useTextInput" (click)="setMode(false)">
+                <i class="fas fa-file-upload"></i>
+                Upload File
+            </button>
+            <button class="tab-btn" [class.active]="useTextInput" (click)="setMode(true)">
+                <i class="fas fa-edit"></i>
+                Paste JSON
+            </button>
+        </div>
+    </div>
+    
+    <!-- Paste JSON Section -->
+    <div *ngIf="useTextInput" class="json-input-container" style="grid-column: 1 / -1; margin-top: 15px;">
+        <div class="json-editor-wrapper">
+            <div class="editor-header">
+                <i class="fas fa-code"></i>
+                <span>Paste JSON Content</span>
+            </div>
+            <div class="editor-body">
+                <div class="line-numbers">
+                    <span *ngFor="let line of (jsonText.split('\n').length > 0 ? [].constructor(jsonText.split('\n').length) : [1]); let i = index">
+                        {{ i + 1 }}
+                    </span>
+                </div>
+                <textarea [(ngModel)]="jsonText" placeholder="Paste your JSON here..." 
+                    spellcheck="false" class="json-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Options: Indentation Selector -->
+    <div class="indent-selector-container" style="grid-column: 1 / -1; margin-top: 20px;">
+        <label class="section-label">Indentation Size</label>
+        <div class="indent-options">
+            <button *ngFor="let size of [2, 4, 8]" class="indent-btn" 
+                [class.active]="indentSize === size" (click)="indentSize = size">
+                {{ size }} Spaces
+            </button>
+        </div>
+    </div>
+
+    <!-- Output Filename (Visible if input provided) -->
+    <div *ngIf="useTextInput || selectedFile" class="form-group" style="grid-column: 1 / -1; margin-top: 20px;">
+        <label>Output Filename</label>
+        <div class="input-wrapper">
+            <i class="fas fa-file-export"></i>
+            <input type="text" [(ngModel)]="outputFilename" placeholder="formatted_json">
+        </div>
+        <small>Extension is added automatically</small>
+    </div>
+
+    <!-- Preview Section -->
+    <div *ngIf="formattedJsonPreview && !isConverting" class="preview-container" style="grid-column: 1 / -1; margin-top: 30px;">
+        <div class="preview-header">
+            <div class="preview-title">
+                <i class="fas fa-eye"></i>
+                <span>Formatted Result Preview</span>
+            </div>
+            <button class="copy-btn" (click)="copyToClipboard()" title="Copy to clipboard">
+                <i class="fas fa-copy"></i>
+                Copy
+            </button>
+        </div>
+        <div class="preview-body">
+            <pre><code>{{ formattedJsonPreview }}</code></pre>
+        </div>
+    </div>
+</app-file-conversion-ui>

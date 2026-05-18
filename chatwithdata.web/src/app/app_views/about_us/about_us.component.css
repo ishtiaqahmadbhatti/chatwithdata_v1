@@ -1,0 +1,394 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    background-color: #f7fafc;
+}
+
+/* Reusing Page Header Style from Privacy/Terms */
+.page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding-top: 8rem;
+    padding-bottom: 6rem;
+    text-align: center;
+    position: relative;
+    clip-path: ellipse(150% 100% at 50% 0%);
+}
+
+.page-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.content-wrapper {
+    max-width: 800px;
+    margin: -5rem auto 4rem;
+    /* Pull up to overlap header */
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* App Header Section */
+.app-header-section {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.logo-container {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    position: relative;
+    overflow: hidden;
+    /* Ensure image stays within circle */
+}
+
+/* logo-circle remains same */
+.logo-circle {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-main-icon {
+    font-size: 5rem;
+    color: white;
+}
+
+.logo-sync-icon {
+    position: absolute;
+    font-size: 2rem;
+    color: #667eea;
+    /* Primary branding color */
+    border-radius: 50%;
+    padding: 0.25rem;
+    /* Create a cutout effect look by positioning */
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.app-name {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #1a202c;
+    /* On light background since it's pulled up? Actually, at -5rem marg, top part is on header...
+                      Wait, the content-wrapper starts overlapping. The Logo is the first item. 
+                      If margin is -5rem, the logo might be half-on-header.
+                      Let's make the logo card-like or just ensure text contrast.
+                      Actually, better to put the logo INSIDE a card or ensure it sits well. 
+                      Given the layout, let's keep it simple. Detailed text color below. */
+    margin-bottom: 0.5rem;
+}
+
+/* Since the main content starts overlapping the header, the text "Chat With Data" 
+   might be on the dark header or the light body background depending on scroll/height.
+   To be safe and consistent with the design, let's put the logo intersecting the line. */
+
+.version-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 20px;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+
+/* General Card Style */
+.section-card,
+.feature-item {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Intro Card */
+.intro-card {
+    text-align: center;
+    line-height: 1.6;
+    color: #4a5568;
+    font-size: 1.1rem;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.stat-card {
+    flex: 1;
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid;
+    /* Color set in HTML */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1a202c;
+    margin-bottom: 0.2rem;
+}
+
+.stat-label {
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+/* Features Section */
+.features-section .section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 1rem;
+    padding-left: 0.5rem;
+}
+
+.feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.feature-item {
+    padding: 0;
+    /* Reset for accordion */
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.feature-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    transition: background-color 0.2s;
+}
+
+.feature-header:hover {
+    background-color: #f8fafc;
+}
+
+.feature-icon-box {
+    width: 36px;
+    height: 36px;
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+}
+
+.feature-title {
+    flex: 1;
+    font-weight: 600;
+    color: #1a202c;
+}
+
+.arrow-icon {
+    color: #a0aec0;
+    transition: transform 0.3s ease;
+}
+
+.arrow-icon.rotated {
+    transform: rotate(180deg);
+}
+
+.feature-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease;
+    background-color: #fafbfc;
+    padding: 0 1.5rem;
+    /* Hidden padding initially */
+}
+
+.feature-content.open {
+    max-height: 500px;
+    /* Arbitrary large height */
+    padding: 0 1.5rem 1.5rem;
+    border-top: 1px solid #edf2f7;
+}
+
+.tools-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.tool-item {
+    display: flex;
+    align-items: flex-start;
+    /* Align checkmark to top if text wraps */
+    color: #4a5568;
+    font-size: 0.95rem;
+}
+
+.tool-icon {
+    color: #00c853;
+    /* Secondary Green */
+    margin-right: 0.75rem;
+    margin-top: 0.2rem;
+    font-size: 1rem;
+}
+
+/* Developer Section */
+.developer-section {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.divider-line {
+    height: 3px;
+    width: 100%;
+    background: linear-gradient(90deg, #00c853 0%, #00e5ff 100%);
+    /* Green to Cyan */
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+}
+
+.built-by {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #718096;
+    margin-bottom: 0.5rem;
+}
+
+.dev-name {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+/* Shimmer Animation Effect */
+.shimmer-text {
+    background-size: 200% auto;
+    animation: textShine 3s linear infinite;
+}
+
+@keyframes textShine {
+    to {
+        background-position: 200% center;
+    }
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.social-btn {
+    text-decoration: none;
+}
+
+.social-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+    /* Box shadow set inline/helper */
+}
+
+.social-icon-wrapper i {
+    font-size: 1.5rem;
+    color: #4a5568;
+    /* Default color, specific colors in icon if needed? 
+                     Actually mobile code sets icon color to white and background to gradient.
+                     Let's mimic the mobile style: gradient bg, white icon */
+}
+
+/* Updating social icons to match mobile 'gradient bg' style better */
+.social-links a:nth-child(1) .social-icon-wrapper {
+    background: linear-gradient(135deg, rgba(0, 200, 83, 0.2), rgba(0, 200, 83, 0.05));
+}
+
+.social-links a:nth-child(1) i {
+    color: #00C853
+}
+
+.social-links a:nth-child(2) .social-icon-wrapper {
+    background: linear-gradient(135deg, rgba(24, 119, 242, 0.2), rgba(24, 119, 242, 0.05));
+}
+
+.social-links a:nth-child(2) i {
+    color: #1877F2;
+}
+
+.social-links a:nth-child(3) .social-icon-wrapper {
+    background: linear-gradient(135deg, rgba(10, 102, 194, 0.2), rgba(10, 102, 194, 0.05));
+}
+
+.social-links a:nth-child(3) i {
+    color: #0A66C2;
+}
+
+.social-links a:nth-child(4) .social-icon-wrapper {
+    background: linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(255, 0, 0, 0.05));
+}
+
+.social-links a:nth-child(4) i {
+    color: #FF0000;
+}
+
+.social-icon-wrapper:hover {
+    transform: scale(1.1);
+}
+
+.copyright {
+    color: #a0aec0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}

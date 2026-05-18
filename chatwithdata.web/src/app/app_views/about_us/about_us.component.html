@@ -1,0 +1,84 @@
+<div class="about-page">
+    <!-- Page Header (Background) -->
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">About</h1>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+
+        <!-- App Header (Logo & Version) -->
+        <div class="app-header-section">
+            <div class="logo-container">
+                <div class="logo-circle">
+                    <i class="fa-regular fa-folder-open logo-main-icon"></i>
+                    <i class="fa-solid fa-rotate logo-sync-icon"></i>
+                </div>
+            </div>
+            <h2 class="app-name">Chat With Data</h2>
+            <div class="version-badge">
+                Version {{data.appVersion}}
+            </div>
+        </div>
+
+        <!-- Intro Section -->
+        <div class="section-card intro-card">
+            <p>{{data.intro}}</p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-grid">
+            <div class="stat-card" *ngFor="let stat of data.stats" [style.border-color]="stat.color + '4D'">
+                <!-- 4D is Approx 30% opacity -->
+                <i [class]="stat.icon" [style.color]="stat.color" class="stat-icon"></i>
+                <div class="stat-value">{{stat.value}}</div>
+                <div class="stat-label">{{stat.label}}</div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <h3 class="section-title">Explore Our Capabilities:</h3>
+            <div class="feature-list">
+                <div class="feature-item" *ngFor="let category of data.features; let i = index">
+                    <div class="feature-header" (click)="toggleCategory(i)" [class.active]="openCategoryIndex === i">
+                        <div class="feature-icon-box">
+                            <i [class]="category.icon"></i>
+                        </div>
+                        <span class="feature-title">{{category.title}}</span>
+                        <i class="fa-solid fa-chevron-down arrow-icon" [class.rotated]="openCategoryIndex === i"></i>
+                    </div>
+
+                    <div class="feature-content" [class.open]="openCategoryIndex === i">
+                        <div class="tools-list">
+                            <div class="tool-item" *ngFor="let tool of category.tools">
+                                <i class="fa-regular fa-circle-check tool-icon"></i>
+                                <span>{{tool}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Developer Info -->
+        <div class="developer-section">
+            <div class="divider-line"></div>
+            <div class="built-by">PROUDLY BUILT BY</div>
+            <div class="dev-name shimmer-text">TechMindsForge</div>
+
+            <div class="social-links">
+                <a *ngFor="let social of data.socialLinks" [href]="social.url" target="_blank" class="social-btn"
+                    [attr.aria-label]="social.label">
+                    <div class="social-icon-wrapper" [style.box-shadow]="'0 4px 15px ' + social.color + '4D'">
+                        <i [class]="social.icon"></i>
+                    </div>
+                </a>
+            </div>
+
+
+        </div>
+
+    </main>
+</div>

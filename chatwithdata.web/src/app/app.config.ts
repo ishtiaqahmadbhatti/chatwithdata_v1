@@ -1,11 +1,27 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter } from '@angular/router';
-
-import { routes } from './app.routes';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { provideClientHydration } from '@angular/platform-browser';
+import { AppRoutes } from './app.routes';
+import { authInterceptor } from './app_services/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideRouter(routes)
-  ]
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(AppRoutes, withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' })),
+    provideClientHydration(),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+  ],
 };
+
+export class ApplicationConfiguration {
+  public ServerBaseUrl: string = 'https://chatwithdataapi.techmindsforge.com';
+  //public ServerBaseUrl: string = 'http://192.168.100.12:8000';
+  public ApiServiceLink: string = this.ServerBaseUrl + '/api/v1';
+  public WebSiteLink: string = 'https://techmindsforge.com/';
+
+  static Get() {
+    var acon = new ApplicationConfiguration();
+    return acon;
+  }
+}

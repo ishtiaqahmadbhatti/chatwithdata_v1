@@ -1,0 +1,62 @@
+<app-file-conversion-ui title="JSON Validator" description="Validate your JSON files or check syntax in real-time."
+    sourceIcon="fas fa-file-code" targetIcon="fas fa-check-circle" allowedExtensions=".json"
+    allowedExtensionsText="Supports .json files" convertButtonText="Validate JSON" [selectedFile]="selectedFile"
+    [isConverting]="isConverting" [conversionStatus]="statusMessage" [uploadProgress]="uploadProgress"
+    [conversionResult]="null" [disableFileUpload]="useTextInput" [keepContentVisible]="true" (fileSelected)="onFileSelected($event)" 
+    (convert)="convert()" (reset)="reset()">
+    
+    <!-- Input Method Tabs (Always Visible) -->
+    <div top-options class="tabs-container">
+        <div class="tabs-wrapper">
+            <button class="tab-btn" [class.active]="!useTextInput" (click)="setMode(false)">
+                <i class="fas fa-file-upload"></i>
+                Upload File
+            </button>
+            <button class="tab-btn" [class.active]="useTextInput" (click)="setMode(true)">
+                <i class="fas fa-edit"></i>
+                Paste JSON
+            </button>
+        </div>
+    </div>
+    
+    <!-- Paste JSON Section (Inside normal ng-content) -->
+    <div *ngIf="useTextInput" class="json-input-container" style="grid-column: 1 / -1; margin-top: 15px;">
+        <div class="json-editor-wrapper">
+            <div class="editor-header">
+                <i class="fas fa-code"></i>
+                <span>Paste JSON Content</span>
+            </div>
+            <div class="editor-body">
+                <div class="line-numbers">
+                    <span *ngFor="let line of (jsonText.split('\n').length > 0 ? [].constructor(jsonText.split('\n').length) : [1]); let i = index">
+                        {{ i + 1 }}
+                    </span>
+                </div>
+                <textarea [(ngModel)]="jsonText" placeholder="Paste your JSON here..." 
+                    spellcheck="false" class="json-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section (Inside normal ng-content) -->
+    <div *ngIf="validationResult" class="result-container" [class.valid]="isValid" [class.invalid]="!isValid" style="grid-column: 1 / -1; margin-top: 20px;">
+        <div class="result-header-card">
+            <div class="result-icon">
+                <i [class]="isValid ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle'"></i>
+            </div>
+            <h3>{{ isValid ? 'JSON IS VALID' : 'JSON IS INVALID' }}</h3>
+        </div>
+        
+        <div *ngIf="!isValid" class="error-details-box">
+            <div class="error-header-row">
+                <span>Error Details:</span>
+                <button class="mini-copy-btn" (click)="copyToClipboard()" title="Copy to clipboard">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+            <div class="error-content">
+                <pre>{{ parseErrorText(validationResult) }}</pre>
+            </div>
+        </div>
+    </div>
+</app-file-conversion-ui>

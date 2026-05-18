@@ -1,0 +1,119 @@
+<div class="conversion-container">
+    <div class="conversion-card">
+        <!-- Header -->
+        <div class="card-header">
+            <div class="header-icons-wrapper">
+                <div class="header-icon source"><i class="fas fa-file-pdf"></i></div>
+                <div class="header-icon-arrow"><i class="fas fa-columns"></i></div>
+                <div class="header-icon target"><i class="fas fa-file-pdf"></i></div>
+            </div>
+            <h1>Compare PDFs</h1>
+            <p>Upload two PDF files to find the differences between them and generate a detailed comparison report.</p>
+        </div>
+
+        <div class="card-content">
+            <input #fileInput1 type="file" accept=".pdf" (change)="onFile1Selected($event)" hidden>
+            <input #fileInput2 type="file" accept=".pdf" (change)="onFile2Selected($event)" hidden>
+
+            <!-- Dual Picker Section -->
+            <div class="dual-picker-grid" *ngIf="!conversionResult">
+                
+                <!-- File 1 Picker -->
+                <div class="file-picker-card" [class.selected]="file1" (click)="fileInput1.click()">
+                    <div class="picker-icon"><i class="fas fa-file-pdf"></i></div>
+                    <div class="picker-info">
+                        <span class="picker-label">First PDF File</span>
+                        <span class="picker-filename">{{ file1 ? file1.name : 'Choose File' }}</span>
+                        <span class="picker-filesize" *ngIf="file1">{{ formatBytes(file1.size) }}</span>
+                    </div>
+                    <button class="picker-btn" [disabled]="isConverting">
+                        {{ file1 ? 'Change' : 'Select' }}
+                    </button>
+                </div>
+
+                <!-- Comparison Icon (Desktop Only) -->
+                <div class="compare-separator">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+
+                <!-- File 2 Picker -->
+                <div class="file-picker-card" [class.selected]="file2" (click)="fileInput2.click()">
+                    <div class="picker-icon"><i class="fas fa-file-pdf"></i></div>
+                    <div class="picker-info">
+                        <span class="picker-label">Second PDF File</span>
+                        <span class="picker-filename">{{ file2 ? file2.name : 'Choose File' }}</span>
+                        <span class="picker-filesize" *ngIf="file2">{{ formatBytes(file2.size) }}</span>
+                    </div>
+                    <button class="picker-btn" [disabled]="isConverting">
+                        {{ file2 ? 'Change' : 'Select' }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Options Card -->
+            <div class="selected-state" *ngIf="file1 && file2">
+                <div class="form-grid" *ngIf="!conversionResult">
+                    <div class="options-card">
+                        <div class="options-header">
+                            <i class="fas fa-cog"></i>
+                            <h3>Comparison Settings</h3>
+                        </div>
+                        <div class="options-body">
+                            <!-- Output Filename -->
+                            <div class="form-group">
+                                <label>Report Filename</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-file-signature"></i>
+                                    <input type="text" [(ngModel)]="outputFilename"
+                                        placeholder="comparison_report"
+                                        [disabled]="isConverting">
+                                </div>
+                                <small>.pdf extension is preserved</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress & Status -->
+                <div class="status-section" *ngIf="isConverting || (conversionStatus && (conversionStatus.includes('✅') || conversionStatus.includes('successfully')))">
+                    <div class="progress-details">
+                        <span class="status-text"
+                            [class.success]="conversionStatus.includes('✅') || conversionStatus.includes('successfully')"
+                            [class.error]="conversionStatus.includes('❌') || conversionStatus.includes('failed')">
+                            {{ conversionStatus }}
+                        </span>
+                        <span *ngIf="isConverting" class="percentage">{{ uploadProgress }}%</span>
+                    </div>
+                    <div class="progress-bar-container" *ngIf="isConverting">
+                        <div class="progress-fill" [style.width.%]="uploadProgress"></div>
+                    </div>
+                </div>
+
+                <!-- Success State -->
+                <div class="success-section" *ngIf="conversionResult">
+                    <div class="success-card">
+                        <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                        <h3>Comparison Report Ready!</h3>
+                        <p>File <strong>{{ conversionResult.fileName }}</strong> is ready for download.</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-reset" (click)="reset()">Reset</button>
+
+                    <button class="btn-convert" (click)="convert()"
+                        [disabled]="isConverting || !file1 || !file2"
+                        *ngIf="!conversionResult">
+                        <span *ngIf="!isConverting">Compare PDFs</span>
+                        <span *ngIf="isConverting"><i class="fas fa-spinner fa-spin"></i> Processing...</span>
+                    </button>
+
+                    <button class="btn-save" (click)="saveFile()" *ngIf="conversionResult">
+                        <i class="fas fa-download"></i> Save Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

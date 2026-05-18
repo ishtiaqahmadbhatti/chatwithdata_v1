@@ -1,0 +1,24 @@
+# Stage 1: Build Angular app
+# node:20-slim from Docker Hub — no ECR Public needed
+FROM node:20-slim AS builder
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --silent
+
+COPY . .
+RUN npx ng build --configuration production
+
+# Stage 2: Lambda runtime — NO apt-get, NO native packages, NO ECR Public!
+FROM node:20-slim
+
+WORKDIR /var/task
+
+# Copy Angular build output
+COPY --from=builder /app/dist/chatwithdata.web/browser ./public
+
+# Copy pure JS Lambda runtime bootstrap (replaces aws-lambda-ric entirely)
+COPY deploy/bootstrap.mjs ./bootstrap.mjs
+
+# Lambda expects ENTRYPOINT to be the runtime bootstrap
+ENTRYPOINT ["node", "/var/task/bootstrap.mjs"]

@@ -1,0 +1,150 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    background-color: #f7fafc;
+}
+
+.page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 6rem 0 8rem;
+    text-align: center;
+    color: white;
+    clip-path: ellipse(150% 100% at 50% 0%);
+    margin-bottom: -4rem;
+}
+
+.page-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.page-subtitle {
+    font-size: 1.25rem;
+    opacity: 0.9;
+}
+
+.content-wrapper {
+    max-width: 1100px;
+    margin: 0 auto 4rem;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 10;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.help-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border-top: 5px solid transparent;
+    /* Set dynamically */
+}
+
+.help-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+    background-color: #f7fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+
+.card-desc {
+    color: #718096;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #667eea;
+    /* Primary Color as default */
+    font-size: 0.95rem;
+}
+
+.help-card:hover .card-footer {
+    text-decoration: underline;
+}
+
+/* Contact Card */
+.contact-card {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    border-left: 5px solid #667eea;
+}
+
+.contact-content h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.contact-content p {
+    color: #718096;
+    font-size: 1.1rem;
+}
+
+.btn-contact {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    background: #2d3748;
+    color: white;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-contact:hover {
+    background: #4a5568;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .contact-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+    }
+}

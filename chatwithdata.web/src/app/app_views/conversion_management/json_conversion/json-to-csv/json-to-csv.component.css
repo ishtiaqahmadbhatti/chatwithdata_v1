@@ -1,0 +1,61 @@
+/* Styles are now managed by the shared component.
+   Only component-specific styles (like the form grid layout) are preserved here if needed.
+*/
+
+.form-grid {
+    display: grid;
+    /* grid-template-columns: 1fr 1fr;  <-- Handled inline for now or can be properly defined */
+    /* gap: 1.5rem; */
+    /* margin-bottom: 2rem; */
+}
+
+/* 
+   Since the shared component handles the main layout, we can keep this file minimal.
+   The specific form inputs (label, input-wrapper, etc.) might need styles if they are not global.
+   However, we should probably move the form styles to global.css or the shared component if they are common.
+   For now, I will include the form-specific styles here to ensure content projection works correctly without breaking styles.
+*/
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.8rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background: #fcfcfc;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background: white;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.5rem;
+    color: #718096;
+    font-size: 0.85rem;
+}

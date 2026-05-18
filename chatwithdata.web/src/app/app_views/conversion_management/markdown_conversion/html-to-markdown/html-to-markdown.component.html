@@ -1,0 +1,15 @@
+<app-file-conversion-ui title="HTML to Markdown" description="Convert HTML code back to Markdown"
+    sourceIcon="fas fa-file-code" targetIcon="fab fa-markdown" allowedExtensions=".html"
+    allowedExtensionsText="Supports .html files" convertButtonText="Convert" [selectedFile]="selectedFile"
+    [isConverting]="isConverting" [conversionStatus]="conversionStatus" [conversionResult]="conversionResult"
+    (fileSelected)="onFileSelected($event)" (convert)="convert()" (reset)="reset()" (download)="saveFile()">
+
+    <div class="form-group" style="grid-column: 1 / -1;">
+        <label>Output Filename</label>
+        <div class="input-wrapper">
+            <i class="fab fa-markdown"></i>
+            <input type="text" [(ngModel)]="outputFilename" placeholder="converted">
+        </div>
+        <small>Extension is added automatically</small>
+    </div>
+</app-file-conversion-ui>

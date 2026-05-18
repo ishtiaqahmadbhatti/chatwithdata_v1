@@ -1,0 +1,165 @@
+<header class="header" [class.scrolled]="isScrolled">
+    <div class="header-container">
+        <!-- Logo/Brand -->
+        <div class="logo">
+            <a routerLink="/" class="logo-link">
+                <div class="header-logo-container">
+                    <div class="header-logo-circle">
+                        <i class="fa-regular fa-folder-open header-logo-main"></i>
+                        <i class="fa-solid fa-rotate header-logo-sync"></i>
+                    </div>
+                </div>
+                <span class="logo-text"><span class="logo-highlight">ChatWithData</span></span>
+            </a>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="nav-menu" [class.mobile-open]="isMobileMenuOpen">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a routerLink="/" class="nav-link" (click)="toggleMobileMenu()">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item dropdown" (mouseenter)="showDropdown = true" (mouseleave)="showDropdown = false">
+                    <a href="javascript:void(0)" class="nav-link">
+                        <i class="fas fa-wrench"></i>Tools
+                        <span class="dropdown-icon">▼</span>
+                    </a>
+                    <div class="dropdown-menu" [class.show]="showDropdown">
+                        @for (tool of tools; track tool.name) {
+                        @if (tool.type === 'route') {
+                        <a [routerLink]="tool.link" class="dropdown-item" (click)="toggleMobileMenu()">
+                            <i [class]="tool.icon"></i>
+                            <span>{{ tool.name }}</span>
+                        </a>
+                        }
+                        @if (tool.type === 'anchor') {
+                        <a [href]="tool.link" class="dropdown-item" (click)="toggleMobileMenu()">
+                            <i [class]="tool.icon"></i>
+                            <span>{{ tool.name }}</span>
+                        </a>
+                        }
+                        }
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a routerLink="/" fragment="features" class="nav-link" (click)="toggleMobileMenu()">
+                        <i class="fas fa-star"></i> Features
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a routerLink="/pricing" class="nav-link" (click)="toggleMobileMenu()">
+                        <i class="fas fa-tags"></i> Pricing
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a routerLink="/about-us" class="nav-link" (click)="toggleMobileMenu()">
+                        <i class="fas fa-info-circle"></i> About
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a routerLink="/contact-us" class="nav-link" (click)="toggleMobileMenu()">
+                        <i class="fas fa-envelope"></i> Contact
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Mobile Actions (inside mobile menu) -->
+            <div class="mobile-actions">
+                @if (!(authService.isLoggedIn$ | async)) {
+                <button class="btn btn-secondary" routerLink="/authentication/signin" (click)="toggleMobileMenu()">Sign
+                    In</button>
+                <button class="btn btn-signup" routerLink="/authentication/signup" (click)="toggleMobileMenu()">Sign
+                    Up</button>
+                }
+                @if (authService.isLoggedIn$ | async) {
+                <div class="mobile-profile-info">
+                    @if (authService.profileImage$ | async; as profileImage) {
+                    <img [src]="profileImage" alt="Profile" class="mobile-profile-img">
+                    } @else {
+                    <div class="profile-avatar mobile">
+                        {{ authService.getUserInitials() }}
+                    </div>
+                    }
+                    <div class="mobile-user-details">
+                        <span class="user-name">{{ authService.getUserName() }}</span>
+                        <span class="user-email">{{ authService.getUserEmail() }}</span>
+                    </div>
+                </div>
+                <a routerLink="/profile/personal-info" (click)="toggleMobileMenu()" class="dropdown-item">
+                    <i class="fas fa-user"></i> Personal Information
+                </a>
+                <a routerLink="/profile/change-password" (click)="toggleMobileMenu()" class="dropdown-item">
+                    <i class="fas fa-lock"></i> Change Password
+                </a>
+                <a routerLink="/profile/subscription" (click)="toggleMobileMenu()" class="dropdown-item">
+                    <i class="fas fa-crown"></i> Subscription
+                </a>
+                <button class="btn btn-secondary" (click)="logout()">Log Out</button>
+                }
+            </div>
+        </nav>
+
+        <!-- Desktop Action Buttons -->
+        <div class="header-actions">
+            @if (!(authService.isLoggedIn$ | async)) {
+            <button class="btn btn-secondary" routerLink="/authentication/signin">Sign In</button>
+            <button class="btn btn-signup" routerLink="/authentication/signup">Sign Up</button>
+            }
+
+            <!-- Profile Dropdown (Logged In) -->
+            @if (authService.isLoggedIn$ | async) {
+            <div class="profile-dropdown-container" (mouseenter)="showProfileDropdown = true"
+                (mouseleave)="showProfileDropdown = false">
+                <div class="profile-icon-wrapper">
+                    @if (authService.profileImage$ | async; as profileImage) {
+                    <img [src]="profileImage" alt="Profile" class="header-profile-img">
+                    } @else {
+                    <div class="profile-avatar">
+                        {{ authService.getUserInitials() }}
+                    </div>
+                    }
+                </div>
+
+                <div class="dropdown-menu profile-menu" [class.show]="showProfileDropdown">
+                    <div class="user-info-header">
+                        @if (authService.profileImage$ | async; as profileImage) {
+                        <img [src]="profileImage" alt="Profile" class="dropdown-profile-img">
+                        } @else {
+                        <div class="profile-avatar dropdown-avatar">
+                            {{ authService.getUserInitials() }}
+                        </div>
+                        }
+                        <div class="user-details-text">
+                            <div class="user-name">{{ authService.getUserName() }}</div>
+                            <div class="user-email">{{ authService.getUserEmail() }}</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a routerLink="/profile/personal-info" class="dropdown-item">
+                        <i class="fas fa-user"></i> <span>Personal Information</span>
+                    </a>
+                    <a routerLink="/profile/change-password" class="dropdown-item">
+                        <i class="fas fa-lock"></i> <span>Change Password</span>
+                    </a>
+                    <a routerLink="/profile/subscription" class="dropdown-item">
+                        <i class="fas fa-crown"></i> <span>Subscription</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a (click)="logout()" class="dropdown-item logout-item">
+                        <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
+                    </a>
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+    </div>
+</header>

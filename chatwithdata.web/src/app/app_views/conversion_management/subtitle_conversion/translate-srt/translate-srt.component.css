@@ -1,0 +1,104 @@
+/* 
+	Styles are managed by the shared file-conversion-ui component
+	Only component-specific styles for projected content needed.
+*/ 
+
+/* Custom Dropdown Styles */
+.dropdown-container {
+    position: relative;
+    user-select: none;
+    grid-column: 1 / -1;
+}
+
+.custom-select-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background-color: #f8fafc;
+}
+
+.custom-select-trigger.disabled {
+    background-color: #edf2f7;
+    cursor: not-allowed;
+    color: #a0aec0;
+}
+
+.custom-select-trigger .arrow {
+    margin-left: 10px;
+    font-size: 0.8rem;
+    transition: transform 0.2s;
+    color: #4a5568;
+}
+
+.custom-dropdown-options {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    max-height: 250px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.dropdown-item {
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #2d3748;
+}
+
+.dropdown-item:hover {
+    background-color: #edf2f7;
+    color: #667eea;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.custom-dropdown-options::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-dropdown-options::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.custom-dropdown-options::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+}
+
+.custom-dropdown-options::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background-color: #f8fafc;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #667eea;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}

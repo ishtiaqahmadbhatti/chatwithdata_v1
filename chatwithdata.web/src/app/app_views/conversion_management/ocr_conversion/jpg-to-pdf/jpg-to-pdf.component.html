@@ -1,0 +1,16 @@
+<app-file-conversion-ui title="JPG to PDF (OCR)" description="Convert JPG to searchable PDF using OCR"
+    sourceIcon="fas fa-file-image" targetIcon="fas fa-file-pdf" allowedExtensions=".jpg,.jpeg"
+    allowedExtensionsText="Supports .jpg,.jpeg files" convertButtonText="Convert" [selectedFile]="selectedFile"
+    [isConverting]="isConverting" [conversionStatus]="conversionStatus" [uploadProgress]="uploadProgress"
+    [conversionResult]="conversionResult" (fileSelected)="onFileSelected($event)" (convert)="convert()"
+    (reset)="reset()" (download)="saveFile()">
+    <!-- Custom Options -->
+    <div class="form-group" style="grid-column: 1 / -1;">
+        <label>Output Filename</label>
+        <div class="input-wrapper">
+            <i class="fas fa-file-pdf"></i>
+            <input type="text" [(ngModel)]="outputFilename" placeholder="converted">
+        </div>
+        <small>Extension is added automatically</small>
+    </div>
+</app-file-conversion-ui>

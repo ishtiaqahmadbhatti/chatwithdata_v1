@@ -1,0 +1,91 @@
+<app-file-conversion-ui title="JSON Schema Info" description="Analyze JSON structure, data types, and property hierarchies."
+    sourceIcon="fas fa-project-diagram" targetIcon="fas fa-info-circle" allowedExtensions=".json"
+    allowedExtensionsText="Supports .json files" convertButtonText="Analyze JSON" [selectedFile]="selectedFile"
+    [isConverting]="isConverting" [conversionStatus]="statusMessage" [uploadProgress]="uploadProgress"
+    [conversionResult]="null" [disableFileUpload]="useTextInput" [keepContentVisible]="true"
+    (fileSelected)="onFileSelected($event)" (convert)="convert()" (reset)="reset()">
+    
+    <!-- Input Method Tabs -->
+    <div top-options class="tabs-container">
+        <div class="tabs-wrapper">
+            <button class="tab-btn" [class.active]="!useTextInput" (click)="setMode(false)">
+                <i class="fas fa-file-upload"></i>
+                Upload File
+            </button>
+            <button class="tab-btn" [class.active]="useTextInput" (click)="setMode(true)">
+                <i class="fas fa-edit"></i>
+                Paste JSON
+            </button>
+        </div>
+    </div>
+    
+    <!-- Paste JSON Section -->
+    <div *ngIf="useTextInput" class="json-input-container" style="grid-column: 1 / -1; margin-top: 15px;">
+        <div class="json-editor-wrapper">
+            <div class="editor-header">
+                <i class="fas fa-code"></i>
+                <span>Paste JSON Content</span>
+            </div>
+            <div class="editor-body">
+                <div class="line-numbers">
+                    <span *ngFor="let line of (jsonText.split('\n').length > 0 ? [].constructor(jsonText.split('\n').length) : [1]); let i = index">
+                        {{ i + 1 }}
+                    </span>
+                </div>
+                <textarea [(ngModel)]="jsonText" placeholder="Paste your JSON here..." 
+                    spellcheck="false" class="json-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div *ngIf="schemaInfo && !isConverting" class="info-results-container" style="grid-column: 1 / -1; margin-top: 30px;">
+        
+        <!-- Summary Cards -->
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="card-icon type"><i class="fas fa-cube"></i></div>
+                <div class="card-content">
+                    <span class="label">Root Type</span>
+                    <span class="value">{{ schemaInfo.type | titlecase }}</span>
+                </div>
+            </div>
+            <div class="info-card">
+                <div class="card-icon size"><i class="fas fa-weight-hanging"></i></div>
+                <div class="card-content">
+                    <span class="label">Data Size</span>
+                    <span class="value">{{ schemaInfo.size | number }} chars</span>
+                </div>
+            </div>
+            <div *ngIf="schemaInfo.length !== null" class="info-card">
+                <div class="card-icon items"><i class="fas fa-list-ol"></i></div>
+                <div class="card-content">
+                    <span class="label">{{ schemaInfo.type === 'dict' ? 'Root Keys' : 'Array Items' }}</span>
+                    <span class="value">{{ schemaInfo.length }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Property Analysis -->
+        <div class="structure-section">
+            <div class="section-header">
+                <i class="fas fa-sitemap"></i>
+                <span>Property Hierarchy</span>
+            </div>
+            <div class="structure-tree">
+                <pre><code>{{ schemaInfo.structure | json }}</code></pre>
+            </div>
+        </div>
+
+        <!-- Keys List (if Object) -->
+        <div *ngIf="schemaInfo.keys" class="keys-section">
+            <div class="section-header">
+                <i class="fas fa-key"></i>
+                <span>Available Keys</span>
+            </div>
+            <div class="tags-cloud">
+                <span *ngFor="let key of schemaInfo.keys" class="key-tag">{{ key }}</span>
+            </div>
+        </div>
+    </div>
+</app-file-conversion-ui>

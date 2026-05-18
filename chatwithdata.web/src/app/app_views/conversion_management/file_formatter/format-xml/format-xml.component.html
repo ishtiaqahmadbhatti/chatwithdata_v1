@@ -1,0 +1,78 @@
+<app-file-conversion-ui title="XML Formatter" description="Beautify and format your XML with proper indentation."
+    sourceIcon="fas fa-file-code" targetIcon="fas fa-align-left" allowedExtensions=".xml"
+    allowedExtensionsText="Supports .xml files" convertButtonText="Format XML" [selectedFile]="selectedFile"
+    [isConverting]="isConverting" [conversionStatus]="statusMessage" [uploadProgress]="uploadProgress"
+    [conversionResult]="conversionResult" [disableFileUpload]="useTextInput" [keepContentVisible]="true"
+    (fileSelected)="onFileSelected($event)" (convert)="convert()" (reset)="reset()" (download)="saveFile()">
+    
+    <!-- Input Method Tabs -->
+    <div top-options class="tabs-container">
+        <div class="tabs-wrapper">
+            <button class="tab-btn" [class.active]="!useTextInput" (click)="setMode(false)">
+                <i class="fas fa-file-upload"></i>
+                Upload File
+            </button>
+            <button class="tab-btn" [class.active]="useTextInput" (click)="setMode(true)">
+                <i class="fas fa-edit"></i>
+                Paste XML
+            </button>
+        </div>
+    </div>
+    
+    <!-- Paste XML Section -->
+    <div *ngIf="useTextInput" class="json-input-container" style="grid-column: 1 / -1; margin-top: 15px;">
+        <div class="json-editor-wrapper">
+            <div class="editor-header">
+                <i class="fas fa-code"></i>
+                <span>Paste XML Content</span>
+            </div>
+            <div class="editor-body">
+                <div class="line-numbers">
+                    <span *ngFor="let line of (xmlText.split('\n').length > 0 ? [].constructor(xmlText.split('\n').length) : [1]); let i = index">
+                        {{ i + 1 }}
+                    </span>
+                </div>
+                <textarea [(ngModel)]="xmlText" placeholder="Paste your XML here..." 
+                    spellcheck="false" class="json-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Options: Indentation Selector -->
+    <div class="indent-selector-container" style="grid-column: 1 / -1; margin-top: 20px;">
+        <label class="section-label">Indentation Size</label>
+        <div class="indent-options">
+            <button *ngFor="let size of [2, 4, 8]" class="indent-btn" 
+                [class.active]="indentSize === size" (click)="indentSize = size">
+                {{ size }} Spaces
+            </button>
+        </div>
+    </div>
+
+    <!-- Output Filename (Visible if input provided) -->
+    <div *ngIf="useTextInput || selectedFile" class="form-group" style="grid-column: 1 / -1; margin-top: 20px;">
+        <label>Output Filename</label>
+        <div class="input-wrapper">
+            <i class="fas fa-file-export"></i>
+            <input type="text" [(ngModel)]="outputFilename" placeholder="formatted_xml">
+        </div>
+        <small>Extension is added automatically</small>
+    </div>
+
+    <!-- Preview Section -->
+    <div *ngIf="formattedXmlPreview && !isConverting" class="preview-container" style="grid-column: 1 / -1; margin-top: 30px;">
+        <div class="preview-header">
+            <div class="preview-title">
+                <i class="fas fa-eye"></i>
+                <span>Formatted Result Preview</span>
+            </div>
+            <button class="copy-btn" (click)="copyToClipboard()" title="Copy to clipboard">
+                <i class="fas fa-copy"></i>
+                Copy
+            </button>
+        </div>
+        <div class="preview-body">
+            <pre><code>{{ formattedXmlPreview }}</code></pre>
+        </div>
+    </div>
+</app-file-conversion-ui>

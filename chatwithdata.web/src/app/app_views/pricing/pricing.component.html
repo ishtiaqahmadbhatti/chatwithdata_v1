@@ -1,0 +1,67 @@
+<div class="pricing-page">
+    <!-- Header Section -->
+    <header class="page-header">
+        <div class="container text-center">
+            <h1 class="page-title">Choose Your Plan</h1>
+            <p class="page-subtitle">Unlock premium features and transform your workflow</p>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <div class="plans-grid">
+            <div class="plan-card" *ngFor="let plan of plans" [class.popular]="plan.isPopular"
+                [style.border-color]="plan.isPopular ? plan.color : ''">
+
+                <!-- Popular Badge -->
+                <div class="popular-badge" *ngIf="plan.isPopular" [style.background-color]="plan.color">
+                    MOST POPULAR
+                </div>
+
+                <!-- Save Badge -->
+                <div class="save-badge" *ngIf="plan.badge" [style.background-color]="plan.color">
+                    {{plan.badge}}
+                </div>
+
+                <div class="card-body">
+                    <div class="plan-header">
+                        <div class="icon-box" [style.color]="plan.color" [style.background-color]="plan.color + '1A'">
+                            <i [class]="plan.icon"></i>
+                        </div>
+                        <div class="title-price-group">
+                            <h3 class="plan-title" [style.color]="plan.color">{{plan.title}}</h3>
+                            <div class="price-container">
+                                <span class="price-amount">{{plan.price}}</span>
+                                <span class="price-period" *ngIf="plan.period">{{plan.period}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="plan-subtitle">{{plan.subtitle}}</p>
+
+                    <div class="divider"></div>
+
+                    <ul class="features-list">
+                        <li *ngFor="let feature of plan.features">
+                            <i class="fa-solid fa-circle-check feature-icon" [style.color]="plan.color"></i>
+                            <span>{{feature}}</span>
+                        </li>
+                    </ul>
+
+                    <button class="select-btn" (click)="selectPlan(plan)" [disabled]="isButtonDisabled(plan)"
+                        [style.background-color]="plan.isPopular ? plan.color : 'transparent'"
+                        [style.color]="plan.isPopular ? '#fff' : '#1a202c'" [style.border-color]="plan.color"
+                        [class.current]="isCurrentPlan(plan.planId)" [class.processing]="isProcessingPlan(plan.planId)">
+                        <span *ngIf="!isProcessingPlan(plan.planId)">{{ getButtonText(plan) }}</span>
+                        <span *ngIf="isProcessingPlan(plan.planId)">
+                            <i class="fa-solid fa-spinner fa-spin"></i> Processing...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            Payments are securely processed by Stripe. Cancel anytime, no questions asked.
+        </div>
+    </main>
+</div>

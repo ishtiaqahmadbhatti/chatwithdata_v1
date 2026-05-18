@@ -1,0 +1,16 @@
+<app-file-conversion-ui title="Word to HTML" description="Convert Word documents to HTML"
+    sourceIcon="fas fa-file-word" targetIcon="fas fa-file-code" allowedExtensions=".doc,.docx"
+    allowedExtensionsText="Supports .doc,.docx files" convertButtonText="Convert" [selectedFile]="selectedFile"
+    [isConverting]="isConverting" [conversionStatus]="conversionStatus" [uploadProgress]="uploadProgress"
+    [conversionResult]="conversionResult" (fileSelected)="onFileSelected($event)" (convert)="convert()"
+    (reset)="reset()" (download)="saveFile()">
+    <!-- Custom Options -->
+    <div class="form-group" style="grid-column: 1 / -1;">
+        <label>Output Filename</label>
+        <div class="input-wrapper">
+            <i class="fas fa-file-code"></i>
+            <input type="text" [(ngModel)]="outputFilename" placeholder="converted">
+        </div>
+        <small>Extension is added automatically</small>
+    </div>
+</app-file-conversion-ui>

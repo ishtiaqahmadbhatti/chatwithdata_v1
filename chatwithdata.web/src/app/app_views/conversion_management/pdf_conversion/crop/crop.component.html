@@ -1,0 +1,149 @@
+<div class="conversion-container">
+    <div class="conversion-card">
+        <!-- Header -->
+        <div class="card-header">
+            <div class="header-icons-wrapper">
+                <div class="header-icon source"><i class="fas fa-file-pdf"></i></div>
+                <div class="header-icon-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="header-icon target"><i class="fas fa-crop"></i></div>
+            </div>
+            <h1>Crop PDF</h1>
+            <p>Crop your PDF documents to specific dimensions or remove unwanted margins.</p>
+        </div>
+
+        <div class="card-content">
+            <input #fileInput type="file" accept=".pdf" (change)="onFileChange($event)" hidden>
+
+            <!-- Upload Section -->
+            <div class="upload-section" *ngIf="!selectedFile" (click)="fileInput.click()">
+                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <h3>Select PDF File</h3>
+                <p>or drag and drop here</p>
+                <span class="file-info-text">Supports .pdf files</span>
+            </div>
+
+            <!-- Selected File & Options -->
+            <div class="selected-state" *ngIf="selectedFile">
+
+                <!-- File Banner -->
+                <div class="file-banner">
+                    <div class="file-info-row">
+                        <div class="file-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="file-details">
+                            <span class="file-name">{{ selectedFile.name }}</span>
+                            <span class="file-size">{{ formatBytes(selectedFile.size) }}</span>
+                        </div>
+                        <button class="icon-btn remove-btn" (click)="reset()" [disabled]="isConverting">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Options Card -->
+                <div class="form-grid" *ngIf="!conversionResult">
+                    <div class="options-card">
+                        <div class="options-header">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                            <h3>Crop Settings</h3>
+                        </div>
+                        <div class="options-body">
+
+                            <div class="row-flex">
+                                <!-- X Position -->
+                                <div class="form-group flex-1">
+                                    <label>X Position (mm)</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-arrows-alt-h"></i>
+                                        <input type="number" [(ngModel)]="x" [disabled]="isConverting">
+                                    </div>
+                                </div>
+
+                                <!-- Y Position -->
+                                <div class="form-group flex-1">
+                                    <label>Y Position (mm)</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-arrows-alt-v"></i>
+                                        <input type="number" [(ngModel)]="y" [disabled]="isConverting">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-flex">
+                                <!-- Width -->
+                                <div class="form-group flex-1">
+                                    <label>Width (mm)</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-text-width"></i>
+                                        <input type="number" [(ngModel)]="width" [disabled]="isConverting">
+                                    </div>
+                                </div>
+
+                                <!-- Height -->
+                                <div class="form-group flex-1">
+                                    <label>Height (mm)</label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-text-height"></i>
+                                        <input type="number" [(ngModel)]="height" [disabled]="isConverting">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Output Filename -->
+                            <div class="form-group">
+                                <label>Output Filename</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-file-signature"></i>
+                                    <input type="text" [(ngModel)]="outputFilename"
+                                        placeholder="cropped_file"
+                                        [disabled]="isConverting">
+                                </div>
+                                <small>.pdf extension is preserved</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress & Status -->
+                <div class="status-section" *ngIf="isConverting || (conversionStatus && (conversionStatus.includes('✅') || conversionStatus.includes('❌') || conversionStatus.includes('successfully')))">
+                    <div class="progress-details">
+                        <span class="status-text"
+                            [class.success]="conversionStatus.includes('✅') || conversionStatus.includes('successfully')"
+                            [class.error]="conversionStatus.includes('❌') || conversionStatus.includes('failed')">
+                            {{ conversionStatus }}
+                        </span>
+                        <span *ngIf="isConverting" class="percentage">{{ uploadProgress }}%</span>
+                    </div>
+                    <div class="progress-bar-container" *ngIf="isConverting">
+                        <div class="progress-fill" [style.width.%]="uploadProgress"></div>
+                    </div>
+                </div>
+
+                <!-- Success State -->
+                <div class="success-section" *ngIf="conversionResult">
+                    <div class="success-card">
+                        <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                        <h3>PDF Cropped Successfully!</h3>
+                        <p>File <strong>{{ conversionResult.fileName }}</strong> is ready for download.</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-reset" (click)="reset()">Reset</button>
+
+                    <button class="btn-convert" (click)="convert()"
+                        [disabled]="isConverting"
+                        *ngIf="!conversionResult">
+                        <span *ngIf="!isConverting">Crop PDF</span>
+                        <span *ngIf="isConverting"><i class="fas fa-spinner fa-spin"></i> Processing...</span>
+                    </button>
+
+                    <button class="btn-save" (click)="saveFile()" *ngIf="conversionResult">
+                        <i class="fas fa-download"></i> Save File
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

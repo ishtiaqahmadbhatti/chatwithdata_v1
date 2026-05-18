@@ -1,0 +1,359 @@
+/* ============================================
+   SIGNIN CONTAINER
+   ============================================ */
+
+.signin-container {
+    min-height: 100vh;
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 1rem 2rem;
+}
+
+.signin-card {
+    width: 100%;
+    max-width: 520px;
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* ============================================
+   HEADER SECTION
+   ============================================ */
+
+.signin-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.icon-container {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    animation: scaleIn 0.6s ease-out 0.2s both;
+}
+
+.icon-container i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.signin-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+    animation: slideUp 0.6s ease-out 0.3s both;
+}
+
+.signin-subtitle {
+    font-size: 0.95rem;
+    color: #718096;
+    animation: fadeIn 0.6s ease-out 0.4s both;
+}
+
+/* ============================================
+   FORM STYLING
+   ============================================ */
+
+.signin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    color: #a0aec0;
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 3rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #2d3748;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-input.error {
+    border-color: #f56565;
+}
+
+.form-input::placeholder {
+    color: #cbd5e0;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #a0aec0;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+    color: #667eea;
+}
+
+.error-message {
+    font-size: 0.8rem;
+    color: #f56565;
+    margin-top: -0.25rem;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #4a5568;
+    cursor: pointer;
+    user-select: none;
+}
+
+.remember-me input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #667eea;
+}
+
+/* ============================================
+   SUBMIT BUTTON
+   ============================================ */
+
+.submit-button {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.submit-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+}
+
+.submit-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.submit-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}
+
+/* ============================================
+   FORGOT PASSWORD LINK
+   ============================================ */
+
+.forgot-password {
+    text-align: right;
+    margin-top: 0.5rem;
+}
+
+.forgot-link {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.forgot-link:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* ============================================
+   SIGN UP LINK
+   ============================================ */
+
+.signup-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.signup-button {
+    padding: 0.5rem 1.25rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.signup-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .signin-container {
+        padding: 5rem 1rem 1rem;
+    }
+
+    .signin-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .signin-title {
+        font-size: 1.5rem;
+    }
+
+    .icon-container {
+        width: 70px;
+        height: 70px;
+    }
+
+    .icon-container i {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .signin-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .signin-title {
+        font-size: 1.25rem;
+    }
+
+    .form-input {
+        padding: 0.75rem 1rem 0.75rem 2.75rem;
+    }
+
+    .input-icon {
+        left: 0.875rem;
+        font-size: 0.9rem;
+    }
+}

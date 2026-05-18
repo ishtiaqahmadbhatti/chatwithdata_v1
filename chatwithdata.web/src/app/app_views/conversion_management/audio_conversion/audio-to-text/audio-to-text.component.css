@@ -1,0 +1,198 @@
+/* Custom styles for Audio to Text component */
+/* The main UI styles are inherited from file-conversion-ui component */
+
+/* Language Select Dropdown */
+:host ::ng-deep .language-select {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.8rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background: #fcfcfc;
+    cursor: pointer;
+    color: #2d3748;
+}
+
+:host ::ng-deep .language-select:hover {
+    border-color: #667eea;
+}
+
+:host ::ng-deep .language-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background: white;
+}
+
+:host ::ng-deep .language-select option {
+    background: white;
+    color: #2d3748;
+    padding: 8px;
+}
+
+/* Transcription Section */
+:host ::ng-deep .transcription-section {
+    margin-top: 20px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+:host ::ng-deep .transcription-header {
+    margin-bottom: 16px;
+}
+
+:host ::ng-deep .transcription-header h3 {
+    color: #48bb78;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+:host ::ng-deep .transcription-header h3 i {
+    font-size: 1.4rem;
+}
+
+:host ::ng-deep .transcription-stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+:host ::ng-deep .stat-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: #f8f9fa;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+:host ::ng-deep .stat-item i {
+    color: #667eea;
+    font-size: 1rem;
+}
+
+:host ::ng-deep .transcription-text-box {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+:host ::ng-deep .text-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+:host ::ng-deep .text-header span {
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 1rem;
+}
+
+:host ::ng-deep .copy-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+:host ::ng-deep .copy-btn:hover {
+    background: #5a67d8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+:host ::ng-deep .copy-btn:active {
+    transform: translateY(0);
+}
+
+:host ::ng-deep .transcription-text {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 8px;
+    color: #2d3748;
+    line-height: 1.8;
+    font-size: 0.95rem;
+    max-height: 400px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    border: 1px solid #e2e8f0;
+}
+
+:host ::ng-deep .transcription-text::-webkit-scrollbar {
+    width: 8px;
+}
+
+:host ::ng-deep .transcription-text::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+:host ::ng-deep .transcription-text::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 4px;
+}
+
+:host ::ng-deep .transcription-text::-webkit-scrollbar-thumb:hover {
+    background: #5a67d8;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    :host ::ng-deep .transcription-stats {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    :host ::ng-deep .stat-item {
+        width: 100%;
+        justify-content: center;
+    }
+
+    :host ::ng-deep .text-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    :host ::ng-deep .copy-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

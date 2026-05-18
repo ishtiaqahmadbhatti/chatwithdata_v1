@@ -1,0 +1,37 @@
+<div class="categories-page">
+    <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <span class="text-gradient">All Conversion Tools</span>
+            </h1>
+            <p class="page-subtitle">Choose from our comprehensive suite of {{ categories.length }}+ categorized tools
+                for all your file needs.</p>
+        </div>
+
+        <!-- Categories Grid -->
+        <div class="categories-grid">
+            <div *ngFor="let category of categories" class="category-card" [ngClass]="category.id"
+                [routerLink]="category.route">
+                <div class="card-header">
+                    <div class="icon-wrapper" [ngClass]="category.id">
+                        <i [class]="category.icon"></i>
+                    </div>
+                    <h3 class="category-title">{{ category.title }}</h3>
+                </div>
+
+                <div class="card-body">
+                    <p class="category-desc">{{ category.description }}</p>
+                </div>
+
+                <div class="card-footer">
+                    <div class="count-info">
+                        <span class="count-bubble" [ngClass]="category.id">{{ category.count }}</span>
+                        <span class="count-label">Tools Available</span>
+                    </div>
+                    <i class="fas fa-arrow-right arrow-icon" [ngClass]="category.id"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<app-file-conversion-ui title="Markdown to Word" description="Convert Markdown to Microsoft Word documents"
+    sourceIcon="fab fa-markdown" targetIcon="fas fa-file-word" allowedExtensions=".md"
+    allowedExtensionsText="Supports .md files" convertButtonText="Convert" [selectedFile]="selectedFile"
+    [isConverting]="isConverting" [conversionStatus]="conversionStatus" [conversionResult]="conversionResult"
+    (fileSelected)="onFileSelected($event)" (convert)="convert()" (reset)="reset()" (download)="saveFile()">
+
+    <div class="form-group" style="grid-column: 1 / -1;">
+        <label>Output Filename</label>
+        <div class="input-wrapper">
+            <i class="fas fa-file-word"></i>
+            <input type="text" [(ngModel)]="outputFilename" placeholder="converted">
+        </div>
+        <small>Extension is added automatically</small>
+    </div>
+</app-file-conversion-ui>

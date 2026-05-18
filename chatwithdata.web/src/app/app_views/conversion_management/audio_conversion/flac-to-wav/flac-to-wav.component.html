@@ -1,0 +1,16 @@
+<app-file-conversion-ui title="FLAC to WAV" description="Convert FLAC audio files to WAV format"
+    sourceIcon="fas fa-music" targetIcon="fas fa-music" allowedExtensions=".flac"
+    allowedExtensionsText="Supports .flac files" convertButtonText="Convert" [selectedFile]="selectedFile"
+    [isConverting]="isConverting" [conversionStatus]="conversionStatus" [uploadProgress]="uploadProgress"
+    [conversionResult]="conversionResult" (fileSelected)="onFileSelected($event)" (convert)="convert()"
+    (reset)="reset()" (download)="saveFile()">
+    <!-- Custom Options -->
+    <div class="form-group" style="grid-column: 1 / -1;">
+        <label>Output Filename</label>
+        <div class="input-wrapper">
+            <i class="fas fa-music"></i>
+            <input type="text" [(ngModel)]="outputFilename" placeholder="converted">
+        </div>
+        <small>Extension is added automatically</small>
+    </div>
+</app-file-conversion-ui>

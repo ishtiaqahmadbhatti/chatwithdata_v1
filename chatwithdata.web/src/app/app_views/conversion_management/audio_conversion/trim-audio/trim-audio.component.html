@@ -1,0 +1,87 @@
+<app-file-conversion-ui title="Trim Audio"
+    description="Cut segments from your audio files and merge them into a single result." sourceIcon="fas fa-cut"
+    targetIcon="fas fa-file-audio" allowedExtensions=".mp3,.wav,.flac,.aac,.ogg,.wma,.m4a"
+    allowedExtensionsText="Supports MP3, WAV, FLAC, AAC, etc." convertButtonText="Trim and Merge"
+    [selectedFile]="selectedFile" [isConverting]="isConverting" [conversionStatus]="conversionStatus"
+    [uploadProgress]="uploadProgress" [conversionResult]="conversionResult" (fileSelected)="onFileSelected($event)"
+    (convert)="convert()" (reset)="reset()" (download)="saveFile()">
+
+    <!-- Custom Segments Section (Projected into the standard UI) -->
+    <div style="grid-column: 1 / -1;">
+        <!-- Audio Preview -->
+        <div *ngIf="audioUrl" class="audio-preview-section">
+            <h3 class="preview-title">
+                <i class="fas fa-play-circle"></i>
+                Audio Preview & Timeline
+            </h3>
+            <audio #audioPlayer controls class="modern-audio-player" (error)="onAudioError($event)"></audio>
+            <div class="preview-hint">
+                <i class="fas fa-info-circle"></i>
+                Use the player to find your precise cut points.
+            </div>
+        </div>
+
+        <!-- Segments List -->
+        <div class="segments-section-header">
+            <h3>Trim Segments</h3>
+            <span style="font-size: 0.8rem; color: #a0aec0;">Combine multiple parts into one file</span>
+        </div>
+
+        <div class="segments-list">
+            <div *ngFor="let segment of segments; let i = index" class="segment-card">
+                <div class="segment-card-header">
+                    <span class="segment-label-badge">Segment {{i + 1}}</span>
+                    <button *ngIf="segments.length > 1" (click)="removeSegment(i)" class="btn-remove-segment"
+                        title="Remove Segment">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+
+                <div class="time-inputs-container">
+                    <div class="time-control-group">
+                        <label>Start From</label>
+                        <div class="time-input-wrapper">
+                            <input type="text" [(ngModel)]="segment.start" placeholder="00:00.00">
+                            <button (click)="captureTime(i, 'start')" class="btn-capture" title="Capture from player">
+                                <i class="fas fa-map-pin"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="time-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+
+                    <div class="time-control-group">
+                        <label>End At</label>
+                        <div class="time-input-wrapper">
+                            <input type="text" [(ngModel)]="segment.end" placeholder="00:10.00">
+                            <button (click)="captureTime(i, 'end')" class="btn-capture" title="Capture from player">
+                                <i class="fas fa-map-pin"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button (click)="addSegment()" type="button" class="btn-add-segment">
+            <i class="fas fa-plus-circle"></i>
+            Add Another Segment
+        </button>
+
+        <!-- Filename Config -->
+        <div class="output-config-section">
+            <h4>Output Settings</h4>
+            <div class="filename-input-container">
+                <i class="fas fa-pen-nib"></i>
+                <input type="text" [(ngModel)]="outputFilename" placeholder="trimmed_audio_result"
+                    [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="format-success-label">
+                <i class="fas fa-check-circle"></i>
+                Output matches source audio format.
+            </div>
+        </div>
+    </div>
+</app-file-conversion-ui>

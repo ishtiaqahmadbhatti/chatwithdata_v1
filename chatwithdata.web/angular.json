@@ -2,11 +2,12 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": false
   },
   "newProjectRoot": "projects",
   "projects": {
-    "chatwithdata": {
+    "chatwithdata.web": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -19,13 +20,19 @@
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
+              "src/assets",
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/intl-tel-input/build/css/intlTelInput.css",
               "src/styles.css"
+            ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
           },
           "configurations": {
@@ -33,13 +40,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "5GB",
+                  "maximumError": "1GB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "4GB",
+                  "maximumError": "8GB"
                 }
               ],
               "outputHashing": "all"
@@ -56,10 +63,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "chatwithdata:build:production"
+              "buildTarget": "chatwithdata.web:build:production"
             },
             "development": {
-              "buildTarget": "chatwithdata:build:development"
+              "buildTarget": "chatwithdata.web:build:development"
             }
           },
           "defaultConfiguration": "development"

@@ -1,0 +1,39 @@
+<div class="terms-page">
+    <!-- Header Section -->
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">Terms of Service</h1>
+            <div class="last-updated">
+                Last Updated: January 1, 2026
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content-wrapper">
+
+        <!-- Policy Sections -->
+        <article class="section-card" *ngFor="let section of sections">
+            <div class="section-header">
+                <div class="icon-box">
+                    <i [class]="section.icon"></i>
+                </div>
+                <div class="section-title">
+                    <h2>{{section.title}}</h2>
+                </div>
+            </div>
+            <div class="section-content">
+                {{section.content}}
+            </div>
+        </article>
+
+        <!-- Contact / Additional Info -->
+        <div class="section-card contact-section">
+            <h3 style="font-size: 1.5rem; font-weight: 700; color: #1a202c; margin-bottom: 1rem;">Legal Inquiries</h3>
+            <p style="color: #4a5568; margin-bottom: 1rem;">For any questions regarding these Terms, please reach out to
+                us:</p>
+            <a href="mailto:techmindsforge@gmail.com" class="contact-link">techmindsforge@gmail.com</a>
+        </div>
+
+    </main>
+</div>

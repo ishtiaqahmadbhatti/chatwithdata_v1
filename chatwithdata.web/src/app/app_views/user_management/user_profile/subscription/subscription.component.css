@@ -1,0 +1,315 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 6rem 2rem 2rem;
+}
+
+.profile-page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.profile-card {
+    background: transparent;
+    border-radius: 20px;
+    padding: 0;
+    box-shadow: none;
+}
+
+.header-section {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: 0 5px 15px rgba(253, 160, 133, 0.4);
+}
+
+h2 {
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    color: #718096;
+}
+
+.current-plan-banner {
+    background: #ebf8ff;
+    border: 1px solid #bee3f8;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #2c5282;
+}
+
+.current-plan-banner strong {
+    color: #2b6cb0;
+    font-weight: 700;
+}
+
+/* Plans Grid - Match Pricing Component */
+.plans-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+/* Card Styles - Match Pricing Component */
+.plan-card {
+    background: white;
+    border-radius: 24px;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.plan-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+}
+
+.plan-card.popular {
+    border-width: 2px;
+    transform: scale(1.05);
+    z-index: 2;
+}
+
+.plan-card.popular:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+
+.plan-card.active {
+    border-color: #00c853;
+    border-width: 2px;
+}
+
+/* Popular Badge */
+.popular-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: white;
+    border-bottom-left-radius: 22px;
+}
+
+/* Save Badge */
+.save-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: white;
+    border-bottom-right-radius: 22px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.card-body {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Header inside card */
+.plan-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.icon-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-right: 1.25rem;
+}
+
+.title-price-group {
+    flex: 1;
+}
+
+.plan-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin: 0 0 0.25rem 0;
+    text-transform: uppercase;
+}
+
+.price-container {
+    display: flex;
+    align-items: baseline;
+}
+
+.price-amount {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1a202c;
+}
+
+.price-period {
+    font-size: 0.9rem;
+    color: #718096;
+    margin-left: 4px;
+    font-weight: 500;
+}
+
+.plan-subtitle {
+    color: #718096;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+}
+
+.divider {
+    height: 1px;
+    background-color: #e2e8f0;
+    margin-bottom: 1.5rem;
+}
+
+/* Features List */
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    flex: 1;
+}
+
+.features-list li {
+    display: flex;
+    align-items: flex-start;
+    font-size: 0.95rem;
+    color: #2d3748;
+}
+
+.feature-icon {
+    margin-right: 0.75rem;
+    margin-top: 0.2rem;
+    font-size: 1.1rem;
+}
+
+/* Button */
+.select-btn {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 16px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 2px solid;
+    transition: all 0.2s;
+}
+
+.select-btn:hover:not(:disabled) {
+    filter: brightness(0.95);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.select-btn.current,
+.select-btn:disabled {
+    background-color: #e2e8f0 !important;
+    border-color: #cbd5e0 !important;
+    color: #718096 !important;
+    cursor: default;
+}
+
+.select-btn.current:hover,
+.select-btn:disabled:hover {
+    transform: none;
+    box-shadow: none;
+    filter: none;
+}
+
+.select-btn.processing {
+    position: relative;
+    pointer-events: none;
+}
+
+.select-btn.processing i {
+    margin-right: 0.5rem;
+}
+
+/* Footer Note */
+.footer-note {
+    text-align: center;
+    margin-top: 3rem;
+    color: #4a5568;
+    font-size: 0.95rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.footer-note i {
+    color: #00c853;
+    font-size: 1.1rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    :host {
+        padding: 5rem 1rem 2rem;
+    }
+
+    .plans-container {
+        grid-template-columns: 1fr;
+    }
+
+    .plan-card.popular {
+        transform: none;
+        margin-top: 0;
+    }
+
+    .plan-card.popular:hover {
+        transform: translateY(-5px);
+    }
+}

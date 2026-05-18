@@ -1,0 +1,143 @@
+<div class="conversion-container">
+    <div class="conversion-card">
+        <!-- Header -->
+        <div class="card-header">
+            <div class="header-icons-wrapper">
+                <div class="header-icon source"><i class="fas fa-file-pdf"></i></div>
+                <div class="header-icon-arrow"><i class="fas fa-plus"></i></div>
+                <div class="header-icon target"><i class="fas fa-file-pdf"></i></div>
+            </div>
+            <h1>Merge PDF Files</h1>
+            <p>Combine multiple PDFs into a single document. Reorder files and choose a custom output name.</p>
+        </div>
+
+        <div class="card-content">
+            <input #fileInput type="file" accept=".pdf" multiple (change)="onFilesSelected($event)" hidden>
+
+            <!-- Upload Section -->
+            <div class="upload-section" *ngIf="selectedFiles.length === 0" (click)="triggerFileInput()">
+                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <h3>Select PDF Files</h3>
+                <p>or drag and drop multiple files here</p>
+                <span class="file-info-text">Supports .pdf files</span>
+            </div>
+
+            <!-- Selected Files List & Options -->
+            <div class="selected-state" *ngIf="selectedFiles.length > 0">
+                
+                <!-- Action Buttons Row -->
+                <div class="files-actions-row">
+                    <button class="btn-add-more" (click)="triggerFileInput()" [disabled]="isConverting">
+                        <i class="fas fa-plus-circle"></i> Add More PDFs
+                    </button>
+                    <button class="btn-clear-all" (click)="reset()" [disabled]="isConverting">
+                        <i class="fas fa-trash-alt"></i> Clear All
+                    </button>
+                </div>
+
+                <!-- Selection Summary Chips -->
+                <div class="summary-chips">
+                    <div class="summary-chip">
+                        <i class="fas fa-files"></i>
+                        <span>Files: {{ selectedFiles.length }}</span>
+                    </div>
+                    <div class="summary-chip">
+                        <i class="fas fa-weight-hanging"></i>
+                        <span>Total Size: {{ getTotalSize() }}</span>
+                    </div>
+                </div>
+
+                <!-- Files List Card -->
+                <div class="files-list-card">
+                    <div class="list-header">
+                        <span>Selected Files (drag to reorder functionality)</span>
+                    </div>
+                    <div class="list-body">
+                        <div class="file-item" *ngFor="let file of selectedFiles; let i = index">
+                            <div class="file-index">{{ i + 1 }}</div>
+                            <div class="file-item-info">
+                                <span class="file-item-name">{{ file.name }}</span>
+                                <span class="file-item-size">{{ formatBytes(file.size) }}</span>
+                            </div>
+                            <div class="file-item-controls">
+                                <button class="control-btn" (click)="moveFileUp(i)" [disabled]="i === 0 || isConverting">
+                                    <i class="fas fa-chevron-up"></i>
+                                </button>
+                                <button class="control-btn" (click)="moveFileDown(i)" [disabled]="i === selectedFiles.length - 1 || isConverting">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <button class="control-btn remove" (click)="removeFile(i)" [disabled]="isConverting">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Options Card -->
+                <div class="form-grid" *ngIf="!conversionResult && selectedFiles.length >= 2">
+                    <div class="options-card">
+                        <div class="options-header">
+                            <i class="fas fa-cog"></i>
+                            <h3>Merge Settings</h3>
+                        </div>
+                        <div class="options-body">
+                            <!-- Output Filename -->
+                            <div class="form-group">
+                                <label>Output Filename</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-file-signature"></i>
+                                    <input type="text" [(ngModel)]="outputFilename" 
+                                        (ngModelChange)="onFilenameChange()"
+                                        placeholder="merged_document"
+                                        [disabled]="isConverting">
+                                </div>
+                                <small>.pdf extension is added automatically</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress & Status -->
+                <div class="status-section" *ngIf="isConverting || (conversionStatus && (conversionStatus.includes('✅') || conversionStatus.includes('❌') || conversionStatus.includes('successfully')))">
+                    <div class="progress-details">
+                        <span class="status-text" 
+                            [class.success]="conversionStatus.includes('✅') || conversionStatus.includes('successfully')"
+                            [class.error]="conversionStatus.includes('❌') || conversionStatus.includes('failed')">
+                            {{ conversionStatus }}
+                        </span>
+                        <span *ngIf="isConverting" class="percentage">{{ uploadProgress }}%</span>
+                    </div>
+                    <div class="progress-bar-container" *ngIf="isConverting">
+                        <div class="progress-fill" [style.width.%]="uploadProgress"></div>
+                    </div>
+                </div>
+
+                <!-- Success State -->
+                <div class="success-section" *ngIf="conversionResult">
+                    <div class="success-card">
+                        <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                        <h3>PDFs Merged Successfully!</h3>
+                        <p>File <strong>{{ conversionResult.fileName }}</strong> is ready for download.</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-reset" (click)="reset()">Reset</button>
+                    
+                    <button class="btn-convert" (click)="convert()" 
+                        [disabled]="isConverting || selectedFiles.length < 2"
+                        *ngIf="!conversionResult">
+                        <span *ngIf="!isConverting">Merge PDFs</span>
+                        <span *ngIf="isConverting"><i class="fas fa-spinner fa-spin"></i> Processing...</span>
+                    </button>
+
+                    <button class="btn-save" (click)="saveFile()" *ngIf="conversionResult">
+                        <i class="fas fa-download"></i> Save File
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,142 @@
+<div class="signup-container">
+    <div class="signup-card">
+        <!-- Header Section -->
+        <div class="signup-header">
+            <div class="icon-container">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h1 class="signup-title">Join ChatWithData</h1>
+            <p class="signup-subtitle">Create your account to get started</p>
+        </div>
+
+        <!-- Signup Form -->
+        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="signup-form">
+            <!-- First Name -->
+            <div class="form-group">
+                <label for="firstName" class="form-label">First Name</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" id="firstName" formControlName="firstName" class="form-input"
+                        placeholder="Enter your first name" [class.error]="firstName?.invalid && firstName?.touched" />
+                </div>
+                <div class="error-message" *ngIf="firstName?.invalid && firstName?.touched">
+                    <span *ngIf="firstName?.errors?.['required']">First name is required</span>
+                </div>
+            </div>
+
+            <!-- Last Name -->
+            <div class="form-group">
+                <label for="lastName" class="form-label">Last Name</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" id="lastName" formControlName="lastName" class="form-input"
+                        placeholder="Enter your last name" [class.error]="lastName?.invalid && lastName?.touched" />
+                </div>
+                <div class="error-message" *ngIf="lastName?.invalid && lastName?.touched">
+                    <span *ngIf="lastName?.errors?.['required']">Last name is required</span>
+                </div>
+            </div>
+
+            <!-- Gender -->
+            <div class="form-group dropdown-container" #genderContainer>
+                <label for="gender" class="form-label">Gender</label>
+                <div class="custom-select-trigger form-input" (click)="toggleGenderDropdown()"
+                    [class.error]="gender?.invalid && gender?.touched">
+                    <span>{{ signupForm.get('gender')?.value || 'Select your gender' }}</span>
+                    <i class="fas fa-chevron-down arrow"></i>
+                </div>
+
+                <div class="custom-dropdown-options" *ngIf="isGenderDropdownOpen">
+                    <div class="dropdown-item" (click)="selectGender('Male')">Male</div>
+                    <div class="dropdown-item" (click)="selectGender('Female')">Female</div>
+                    <div class="dropdown-item" (click)="selectGender('Other')">Other</div>
+                    <div class="dropdown-item" (click)="selectGender('Prefer not to say')">Prefer not to say</div>
+                </div>
+
+                <div class="error-message" *ngIf="gender?.invalid && gender?.touched">
+                    <span *ngIf="gender?.errors?.['required']">Gender is required</span>
+                </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-group">
+                <label for="phone" class="form-label">Phone Number</label>
+                <div class="input-wrapper phone-input-wrapper">
+                    <input #phoneInput type="tel" id="phone" formControlName="phone" class="form-input phone-input"
+                        placeholder="Enter your phone number" [class.error]="phone?.invalid && phone?.touched" />
+                </div>
+                <div class="error-message" *ngIf="phone?.invalid && phone?.touched">
+                    <span *ngIf="phone?.errors?.['required']">Phone number is required</span>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="email" formControlName="email" class="form-input"
+                        placeholder="Enter your email" [class.error]="email?.invalid && email?.touched" />
+                </div>
+                <div class="error-message" *ngIf="email?.invalid && email?.touched">
+                    <span *ngIf="email?.errors?.['required']">Email is required</span>
+                    <span *ngIf="email?.errors?.['email']">Please enter a valid email</span>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
+                        class="form-input" placeholder="Enter your password" autocomplete="new-password"
+                        [class.error]="password?.invalid && password?.touched" />
+                    <button type="button" class="toggle-password" (click)="showPassword = !showPassword">
+                        <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                    </button>
+                </div>
+                <div class="password-hint">
+                    Min 8 chars, 1 Upper, 1 Lower, 1 Number, 1 Special
+                </div>
+                <div class="error-message" *ngIf="password?.invalid && password?.touched">
+                    <span *ngIf="password?.errors?.['required']">Password is required</span>
+                    <span *ngIf="password?.errors?.['weakPassword']">Password is not strong enough</span>
+                </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword"
+                        formControlName="confirmPassword" class="form-input" placeholder="Confirm your password"
+                        autocomplete="new-password"
+                        [class.error]="confirmPassword?.invalid && confirmPassword?.touched" />
+                    <button type="button" class="toggle-password" (click)="showConfirmPassword = !showConfirmPassword">
+                        <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                    </button>
+                </div>
+                <div class="error-message" *ngIf="confirmPassword?.invalid && confirmPassword?.touched">
+                    <span *ngIf="confirmPassword?.errors?.['required']">Please confirm your password</span>
+                </div>
+                <div class="error-message" *ngIf="signupForm.errors?.['passwordMismatch'] && confirmPassword?.touched">
+                    <span>Passwords do not match</span>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-button" [disabled]="isSubmitting">
+                <span *ngIf="!isSubmitting">CREATE ACCOUNT</span>
+                <span *ngIf="isSubmitting" class="spinner"></span>
+            </button>
+
+            <!-- Sign In Link -->
+            <div class="signin-link">
+                <span>Already have an account?</span>
+                <a routerLink="/authentication/signin" class="signin-button">Sign In</a>
+            </div>
+        </form>
+    </div>
+</div>

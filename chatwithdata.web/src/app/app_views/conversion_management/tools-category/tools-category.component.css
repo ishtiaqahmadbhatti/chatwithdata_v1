@@ -1,0 +1,493 @@
+.categories-page {
+    padding: 6rem 0 4rem;
+    min-height: 80vh;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Page Header */
+.page-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.page-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: #1a202c;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-subtitle {
+    font-size: 1.2rem;
+    color: #718096;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Grid */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.category-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1rem;
+    /* Aggressively Reduced */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    text-decoration: none;
+    height: 100%;
+}
+
+.category-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Card Internals */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    /* Tight gap */
+    margin-bottom: 0.75rem;
+}
+
+.card-body {
+    flex-grow: 1;
+    margin-bottom: 0.75rem;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #edf2f7;
+    padding-top: 0.75rem;
+}
+
+.count-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.count-bubble {
+    min-width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    /* Circle Bubble */
+    background: #edf2f7;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: 1px solid #cbd5e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.count-label {
+    font-size: 0.85rem;
+    color: #718096;
+    font-weight: 600;
+}
+
+.arrow-icon {
+    font-size: 1.2rem;
+    color: #a0aec0;
+    transition: transform 0.2s, color 0.2s;
+    flex-shrink: 0;
+}
+
+.category-card:hover .arrow-icon {
+    transform: translateX(5px);
+    color: #667eea;
+}
+
+
+
+/* Clean look? Or keep border. Keeping border for separation. */
+/*
+.card-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-top: none;
+    border-top: 1px solid #edf2f7;
+    padding-top: 0.75rem;
+}
+*/
+
+.icon-wrapper {
+    width: 40px;
+    /* Smaller Icon */
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+/* Category Colors */
+.icon-wrapper.pdf,
+.count-bubble.pdf {
+    background: linear-gradient(135deg, #FF5252 0%, #D50000 100%);
+}
+
+.icon-wrapper.image,
+.count-bubble.image {
+    background: linear-gradient(135deg, #E040FB 0%, #AA00FF 100%);
+}
+
+.icon-wrapper.audio,
+.count-bubble.audio {
+    background: linear-gradient(135deg, #FF4081 0%, #C51162 100%);
+}
+
+.icon-wrapper.video,
+.count-bubble.video {
+    background: linear-gradient(135deg, #448AFF 0%, #2962FF 100%);
+}
+
+.icon-wrapper.office,
+.count-bubble.office {
+    background: linear-gradient(135deg, #FF6E40 0%, #FF3D00 100%);
+}
+
+.icon-wrapper.ebook,
+.count-bubble.ebook {
+    background: linear-gradient(135deg, #69F0AE 0%, #00C853 100%);
+}
+
+.icon-wrapper.json,
+.count-bubble.json {
+    background: linear-gradient(135deg, #FFD740 0%, #FFAB00 100%);
+    color: #37474F;
+}
+
+.icon-wrapper.xml,
+.count-bubble.xml {
+    background: linear-gradient(135deg, #536DFE 0%, #304FFE 100%);
+}
+
+.icon-wrapper.csv,
+.count-bubble.csv {
+    background: linear-gradient(135deg, #64FFDA 0%, #1DE9B6 100%);
+    color: #004D40;
+}
+
+.icon-wrapper.text,
+.count-bubble.text {
+    background: linear-gradient(135deg, #B0BEC5 0%, #78909C 100%);
+}
+
+.icon-wrapper.ocr,
+.count-bubble.ocr {
+    background: linear-gradient(135deg, #18FFFF 0%, #00B8D4 100%);
+    color: #006064;
+}
+
+.icon-wrapper.website,
+.count-bubble.website {
+    background: linear-gradient(135deg, #40C4FF 0%, #0091EA 100%);
+}
+
+.icon-wrapper.subtitle,
+.count-bubble.subtitle {
+    background: linear-gradient(135deg, #FFAB40 0%, #FF6D00 100%);
+}
+
+.icon-wrapper.formatter,
+.count-bubble.formatter {
+    background: linear-gradient(135deg, #00E676 0%, #00C853 100%);
+}
+
+.icon-wrapper.markdown,
+.count-bubble.markdown {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+
+
+.category-title {
+    font-size: 1.05rem;
+    /* Reduced to fit */
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0;
+    line-height: 1.2;
+    /* Allow wrapping logic but prefer sticking together. */
+    /* If we use nowrap and it fails, it truncates. User dislikes. */
+    /* If we use normal and it wraps, user dislikes "Tools" on next line. */
+    /* Try normal but tight spacing to discourage wrap */
+    word-spacing: -1px;
+    /* Slight squeeze */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.category-desc {
+    color: #718096;
+    line-height: 1.5;
+    font-size: 0.95rem;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/*
+.tool-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    background: #edf2f7;
+    border: 1px solid #cbd5e0;
+    border-radius: 999px;
+    transition: all 0.2s;
+}
+
+.count-text {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #4a5568;
+    white-space: nowrap;
+}
+
+.arrow-icon {
+    font-size: 1.8rem;
+    color: #a0aec0;
+    transition: transform 0.2s, color 0.2s;
+    flex-shrink: 0;
+}
+
+.category-card:hover .arrow-icon {
+    transform: translateX(5px);
+}
+
+.category-card:hover .tool-badge {
+    background: #e2e8f0;
+    border-color: #cbd5e0;
+}
+
+*/
+
+/* Category Hover Shadows */
+.category-card.pdf:hover {
+    box-shadow: 0 15px 30px rgba(213, 0, 0, 0.2);
+    border-color: rgba(213, 0, 0, 0.2);
+}
+
+.category-card.image:hover {
+    box-shadow: 0 15px 30px rgba(170, 0, 255, 0.2);
+    border-color: rgba(170, 0, 255, 0.2);
+}
+
+.category-card.audio:hover {
+    box-shadow: 0 15px 30px rgba(197, 17, 98, 0.2);
+    border-color: rgba(197, 17, 98, 0.2);
+}
+
+.category-card.video:hover {
+    box-shadow: 0 15px 30px rgba(41, 98, 255, 0.2);
+    border-color: rgba(41, 98, 255, 0.2);
+}
+
+.category-card.office:hover {
+    box-shadow: 0 15px 30px rgba(255, 61, 0, 0.2);
+    border-color: rgba(255, 61, 0, 0.2);
+}
+
+.category-card.ebook:hover {
+    box-shadow: 0 15px 30px rgba(0, 200, 83, 0.2);
+    border-color: rgba(0, 200, 83, 0.2);
+}
+
+.category-card.json:hover {
+    box-shadow: 0 15px 30px rgba(255, 171, 0, 0.2);
+    border-color: rgba(255, 171, 0, 0.2);
+}
+
+.category-card.xml:hover {
+    box-shadow: 0 15px 30px rgba(48, 79, 254, 0.2);
+    border-color: rgba(48, 79, 254, 0.2);
+}
+
+.category-card.csv:hover {
+    box-shadow: 0 15px 30px rgba(0, 77, 64, 0.2);
+    border-color: rgba(0, 77, 64, 0.2);
+}
+
+.category-card.text:hover {
+    box-shadow: 0 15px 30px rgba(120, 144, 156, 0.2);
+    border-color: rgba(120, 144, 156, 0.2);
+}
+
+.category-card.ocr:hover {
+    box-shadow: 0 15px 30px rgba(0, 96, 100, 0.2);
+    border-color: rgba(0, 96, 100, 0.2);
+}
+
+.category-card.website:hover {
+    box-shadow: 0 15px 30px rgba(0, 145, 234, 0.2);
+    border-color: rgba(0, 145, 234, 0.2);
+}
+
+.category-card.subtitle:hover {
+    box-shadow: 0 15px 30px rgba(255, 109, 0, 0.2);
+    border-color: rgba(255, 109, 0, 0.2);
+}
+
+.category-card.formatter:hover {
+    box-shadow: 0 15px 30px rgba(0, 200, 83, 0.2);
+    border-color: rgba(0, 200, 83, 0.2);
+}
+
+.category-card.markdown:hover {
+    box-shadow: 0 15px 30px rgba(30, 60, 114, 0.2);
+    border-color: rgba(30, 60, 114, 0.2);
+}
+
+/* Category Arrow Colors (Gradient Text) */
+.arrow-icon.pdf {
+    background: linear-gradient(135deg, #FF5252 0%, #D50000 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.image {
+    background: linear-gradient(135deg, #E040FB 0%, #AA00FF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.audio {
+    background: linear-gradient(135deg, #FF4081 0%, #C51162 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.video {
+    background: linear-gradient(135deg, #448AFF 0%, #2962FF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.office {
+    background: linear-gradient(135deg, #FF6E40 0%, #FF3D00 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.ebook {
+    background: linear-gradient(135deg, #69F0AE 0%, #00C853 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.json {
+    background: linear-gradient(135deg, #FFD740 0%, #FFAB00 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.xml {
+    background: linear-gradient(135deg, #536DFE 0%, #304FFE 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.csv {
+    background: linear-gradient(135deg, #64FFDA 0%, #1DE9B6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.text {
+    background: linear-gradient(135deg, #B0BEC5 0%, #78909C 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.ocr {
+    background: linear-gradient(135deg, #18FFFF 0%, #00B8D4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.website {
+    background: linear-gradient(135deg, #40C4FF 0%, #0091EA 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.subtitle {
+    background: linear-gradient(135deg, #FFAB40 0%, #FF6D00 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.formatter {
+    background: linear-gradient(135deg, #00E676 0%, #00C853 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.arrow-icon.markdown {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2.25rem;
+    }
+}

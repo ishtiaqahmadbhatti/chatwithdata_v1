@@ -1,0 +1,73 @@
+<div class="query-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">General Inquiries</h1>
+            <p class="page-subtitle">Have a question? We're here to help.</p>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <div class="query-card">
+            <form [formGroup]="queryForm" (ngSubmit)="onSubmit()">
+
+                <div class="form-row">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" id="name" formControlName="name" class="form-control"
+                            placeholder="Your Name">
+                        <div *ngIf="submitted && queryForm.get('name')?.errors" class="error-msg">
+                            Name is required
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" formControlName="email" class="form-control"
+                            placeholder="your@email.com">
+                        <div *ngIf="submitted && queryForm.get('email')?.errors" class="error-msg">
+                            Valid email is required
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subject -->
+                <div class="form-group">
+                    <label for="subject" class="form-label">Subject</label>
+                    <input type="text" id="subject" formControlName="subject" class="form-control"
+                        placeholder="What is this about?">
+                    <div *ngIf="submitted && queryForm.get('subject')?.errors" class="error-msg">
+                        Subject must be at least 5 characters
+                    </div>
+                </div>
+
+                <!-- Query -->
+                <div class="form-group">
+                    <label for="query" class="form-label">Your Query</label>
+                    <textarea id="query" formControlName="query" class="form-control" rows="6"
+                        placeholder="Type your question here..."></textarea>
+                    <div *ngIf="submitted && queryForm.get('query')?.errors" class="error-msg">
+                        Query must be at least 20 characters
+                    </div>
+                </div>
+
+                <!-- Attachment -->
+                <div class="form-group">
+                    <label class="form-label">Attachment (Optional)</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" (change)="onFileChange($event)" class="file-input" id="attachment">
+                        <label for="attachment" class="file-upload-label">
+                            <i class="fas fa-paperclip"></i>
+                            <span>{{ selectedFileName || 'Attach file...' }}</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" [disabled]="isProcessing">
+                    {{ isProcessing ? 'Submitting...' : 'Submit Query' }}
+                </button>
+            </form>
+        </div>
+    </main>
+</div>

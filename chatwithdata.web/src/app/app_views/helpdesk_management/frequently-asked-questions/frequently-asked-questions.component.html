@@ -1,0 +1,91 @@
+<div class="faq-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">Frequently Asked Questions</h1>
+            <p class="page-subtitle">Find answers to common questions about ChatWithData.</p>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <div class="faq-container">
+            <!-- Sidebar Categories -->
+            <div class="faq-sidebar">
+                <button *ngFor="let category of faqData; let i = index" class="category-btn"
+                    [class.active]="openCategoryIndex === i" (click)="toggleCategory(i)">
+                    {{category.category}}
+                </button>
+            </div>
+
+            <!-- Questions Area -->
+            <div class="faq-content">
+                <h2 class="category-title">{{faqData[openCategoryIndex].category}}</h2>
+
+                <div class="faq-list">
+                    <div class="faq-item" *ngFor="let q of faqData[openCategoryIndex].questions; let i = index">
+                        <div class="faq-question" (click)="toggleQuestion(i)" [class.active]="openQuestionIndex === i">
+                            <span>{{q.question}}</span>
+                            <i class="fas fa-chevron-down arrow-icon" [class.rotated]="openQuestionIndex === i"></i>
+                        </div>
+                        <div class="faq-answer" [class.open]="openQuestionIndex === i">
+                            <p>{{q.answer}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="faq-cta">
+            <h3>Still have questions?</h3>
+            <p>If you couldn't find the answer you were looking for, ask us directly.</p>
+
+            <form [formGroup]="faqForm" (ngSubmit)="onSubmit()" class="faq-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" formControlName="name" class="form-control" placeholder="Your Name">
+                        <div *ngIf="submitted && faqForm.get('name')?.errors" class="error-msg">
+                            Name is required
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" formControlName="email" class="form-control" placeholder="Your Email">
+                        <div *ngIf="submitted && faqForm.get('email')?.errors" class="error-msg">
+                            Email is required
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" #categoryDropdownContainer>
+                    <div class="dropdown-container">
+                        <div class="custom-select-trigger form-control" (click)="toggleCategoryDropdown()"
+                            [class.invalid]="submitted && faqForm.get('category')?.errors">
+                            <span>{{ getSelectedCategoryLabel() }}</span>
+                            <i class="fas fa-chevron-down arrow"></i>
+                        </div>
+
+                        <div class="custom-dropdown-options" *ngIf="isCategoryDropdownOpen">
+                            <div class="dropdown-item" *ngFor="let cat of faqData"
+                                (click)="selectCategoryDropdown(cat.category)">
+                                {{ cat.category }}
+                            </div>
+                            <div class="dropdown-item" (click)="selectCategoryDropdown('General')">Other</div>
+                        </div>
+                    </div>
+                    <div *ngIf="submitted && faqForm.get('category')?.errors" class="error-msg">
+                        Category is required
+                    </div>
+                </div>
+                <div class="form-group">
+                    <textarea formControlName="question" class="form-control" rows="3"
+                        placeholder="Type your question here..."></textarea>
+                    <div *ngIf="submitted && faqForm.get('question')?.errors" class="error-msg">
+                        Question must be at least 10 characters
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit" [disabled]="isProcessing">
+                    {{ isProcessing ? 'Submitting...' : 'Ask Question' }}
+                </button>
+            </form>
+        </div>
+    </main>
+</div>

@@ -1,0 +1,106 @@
+<div class="feedback-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">Tool Feedback</h1>
+            <p class="page-subtitle">Help us improve specific tools by sharing your experience.</p>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <div class="feedback-card">
+            <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
+
+                <div class="form-row">
+                    <!-- Name Field -->
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" formControlName="name" class="form-control" placeholder="John Doe">
+                        <div *ngIf="submitted && feedbackForm.get('name')?.errors" class="error-msg">
+                            Name is required
+                        </div>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" formControlName="email" class="form-control" placeholder="john@example.com">
+                        <div *ngIf="submitted && feedbackForm.get('email')?.errors" class="error-msg">
+                            Valid email is required
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <!-- Category Selection -->
+                    <div class="form-group dropdown-container" #categoryContainer>
+                        <label>Conversion Category</label>
+                        <div class="custom-select-trigger form-control" (click)="toggleCategoryDropdown()"
+                            [class.disabled]="isLocked"
+                            [class.invalid]="submitted && feedbackForm.get('category')?.errors">
+                            {{ feedbackForm.get('category')?.value || 'Select Category' }}
+                            <i class="fas fa-chevron-down arrow" *ngIf="!isLocked"></i>
+                        </div>
+
+                        <div class="custom-dropdown-options" *ngIf="isCategoryDropdownOpen">
+                            <div class="dropdown-item" *ngFor="let cat of toolCategories"
+                                (click)="selectCategory(cat.name)">
+                                {{ cat.name }}
+                            </div>
+                        </div>
+
+                        <div *ngIf="submitted && feedbackForm.get('category')?.errors" class="error-msg">
+                            Category is required
+                        </div>
+                    </div>
+
+                    <!-- Tool Selection (Dependent Dropdown) -->
+                    <div class="form-group dropdown-container" #toolContainer>
+                        <label>Specific Tool</label>
+                        <div class="custom-select-trigger form-control" (click)="toggleToolDropdown()"
+                            [class.disabled]="selectedTools.length === 0 || isLocked"
+                            [class.invalid]="submitted && feedbackForm.get('tool')?.errors">
+                            {{ feedbackForm.get('tool')?.value || 'Select Tool' }}
+                            <i class="fas fa-chevron-down arrow" *ngIf="!isLocked"></i>
+                        </div>
+
+                        <div class="custom-dropdown-options" *ngIf="isToolDropdownOpen">
+                            <div class="dropdown-item" *ngFor="let tool of selectedTools" (click)="selectTool(tool)">
+                                {{ tool }}
+                            </div>
+                        </div>
+
+                        <div *ngIf="submitted && feedbackForm.get('tool')?.errors" class="error-msg">
+                            Tool is required
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rating Field -->
+                <div class="form-group">
+                    <label>Rate this Tool</label>
+                    <div class="rating-stars" [ngClass]="'stars-' + (feedbackForm.get('rating')?.value || 0)">
+                        <i *ngFor="let r of ratings" class="fas fa-star"
+                            [class.active]="feedbackForm.get('rating')?.value >= r" (click)="setRating(r)"></i>
+                    </div>
+                    <div *ngIf="submitted && feedbackForm.get('rating')?.errors" class="error-msg">
+                        Please provide a rating
+                    </div>
+                </div>
+
+                <!-- Message Field -->
+                <div class="form-group">
+                    <label>Your Feedback</label>
+                    <textarea formControlName="message" class="form-control" rows="5"
+                        placeholder="Tell us what you liked or how we can improve..."></textarea>
+                    <div *ngIf="submitted && feedbackForm.get('message')?.errors" class="error-msg">
+                        Feedback message is required (min 10 chars)
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" [disabled]="isProcessing">
+                    {{ isProcessing ? 'Submitting...' : 'Submit Feedback' }}
+                </button>
+            </form>
+        </div>
+    </main>
+</div>

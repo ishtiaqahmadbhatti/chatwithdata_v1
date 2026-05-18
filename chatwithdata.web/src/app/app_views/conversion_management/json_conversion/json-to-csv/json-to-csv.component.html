@@ -1,0 +1,27 @@
+<app-file-conversion-ui title="JSON to CSV"
+    description="Convert your JSON data structures into flat CSV tables instantly." sourceIcon="fas fa-file-code"
+    targetIcon="fas fa-file-csv" allowedExtensions=".json" allowedExtensionsText="Supports .json files"
+    convertButtonText="Convert to CSV" [selectedFile]="selectedFile" [isConverting]="isConverting"
+    [conversionStatus]="conversionStatus" [uploadProgress]="uploadProgress" [conversionResult]="conversionResult"
+    (fileSelected)="onFileSelected($event)" (convert)="convert()" (reset)="reset()" (download)="saveFile()">
+    <!-- Custom Options -->
+    <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+        <div class="form-group">
+            <label>Output Filename</label>
+            <div class="input-wrapper">
+                <i class="fas fa-file-csv"></i>
+                <input type="text" [(ngModel)]="outputFilename" placeholder="converted">
+            </div>
+            <small>.csv extension is added automatically</small>
+        </div>
+
+        <div class="form-group">
+            <label>Delimiter</label>
+            <div class="input-wrapper">
+                <i class="fas fa-columns"></i>
+                <input type="text" [(ngModel)]="delimiter" placeholder=",">
+            </div>
+            <small>Character to separate values (default: ,)</small>
+        </div>
+    </div>
+</app-file-conversion-ui>

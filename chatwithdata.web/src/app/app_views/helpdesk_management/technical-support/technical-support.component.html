@@ -1,0 +1,86 @@
+<div class="support-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">Technical Support</h1>
+            <p class="page-subtitle">Experiencing technical issues? Let us help you fix them.</p>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <div class="support-card">
+            <form [formGroup]="supportForm" (ngSubmit)="onSubmit()">
+
+                <div class="form-row">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" id="name" formControlName="name" class="form-control"
+                            placeholder="Your Name">
+                        <div *ngIf="submitted && supportForm.get('name')?.errors" class="error-msg">
+                            Name is required
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" formControlName="email" class="form-control"
+                            placeholder="your@email.com">
+                        <div *ngIf="submitted && supportForm.get('email')?.errors" class="error-msg">
+                            Valid email is required
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Issue Type -->
+                <!-- Issue Type -->
+                <div class="form-group" #issueTypeContainer>
+                    <label for="issueType" class="form-label">Issue Type</label>
+                    <div class="dropdown-container">
+                        <div class="custom-select-trigger form-control" (click)="toggleIssueTypeDropdown()"
+                            [class.invalid]="submitted && supportForm.get('issueType')?.errors">
+                            <span>{{ getSelectedIssueLabel() }}</span>
+                            <i class="fas fa-chevron-down arrow"></i>
+                        </div>
+
+                        <div class="custom-dropdown-options" *ngIf="isIssueTypeDropdownOpen">
+                            <div class="dropdown-item" *ngFor="let type of issueTypes"
+                                (click)="selectIssueType(type.value)">
+                                {{ type.label }}
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="submitted && supportForm.get('issueType')?.errors" class="error-msg">
+                        Please select an issue type
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="description" class="form-label">Issue Description</label>
+                    <textarea id="description" formControlName="description" class="form-control" rows="6"
+                        placeholder="Please describe the issue in detail..."></textarea>
+                    <div *ngIf="submitted && supportForm.get('description')?.errors" class="error-msg">
+                        Description must be at least 20 characters
+                    </div>
+                </div>
+
+                <!-- Attachment -->
+                <div class="form-group">
+                    <label class="form-label">Screenshot / Log File (Optional)</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" (change)="onFileChange($event)" class="file-input" id="attachment">
+                        <label for="attachment" class="file-upload-label">
+                            <i class="fas fa-paperclip"></i>
+                            <span>{{ selectedFileName || 'Attach file...' }}</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" [disabled]="isProcessing">
+                    {{ isProcessing ? 'Submitting...' : 'Submit Ticket' }}
+                </button>
+            </form>
+        </div>
+    </main>
+</div>

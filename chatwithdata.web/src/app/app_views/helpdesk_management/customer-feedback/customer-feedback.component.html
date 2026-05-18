@@ -1,0 +1,63 @@
+<div class="feedback-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">Share Your Feedback</h1>
+            <p class="page-subtitle">We value your opinion to improve ChatWithData</p>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <div class="feedback-card">
+            <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
+                <!-- Rating -->
+                <div class="form-group rating-group">
+                    <label class="form-label">How was your experience?</label>
+                    <div class="star-rating" [ngClass]="'stars-' + (feedbackForm.get('rating')?.value || 0)">
+                        <i *ngFor="let r of ratings" class="fas fa-star"
+                            [class.active]="feedbackForm.get('rating')?.value >= r" (click)="setRating(r)"></i>
+                    </div>
+                    <div *ngIf="submitted && feedbackForm.get('rating')?.errors" class="error-msg">
+                        Please select a rating
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" id="name" formControlName="name" class="form-control"
+                            placeholder="Your Name">
+                        <div *ngIf="submitted && feedbackForm.get('name')?.errors" class="error-msg">
+                            Name is required
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" formControlName="email" class="form-control"
+                            placeholder="your@email.com">
+                        <div *ngIf="submitted && feedbackForm.get('email')?.errors" class="error-msg">
+                            Valid email is required
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message -->
+                <div class="form-group">
+                    <label for="message" class="form-label">Feedback</label>
+                    <textarea id="message" formControlName="message" class="form-control" rows="5"
+                        placeholder="Tell us what you think..."></textarea>
+                    <div *ngIf="submitted && feedbackForm.get('message')?.errors" class="error-msg">
+                        Message must be at least 10 characters
+                    </div>
+                </div>
+
+                <!-- Attachment -->
+                <button type="submit" class="btn-submit" [disabled]="isProcessing">
+                    {{ isProcessing ? 'Submitting...' : 'Submit Feedback' }}
+                </button>
+            </form>
+        </div>
+    </main>
+</div>

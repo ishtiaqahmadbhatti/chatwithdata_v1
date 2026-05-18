@@ -1,0 +1,116 @@
+<div class="conversion-container">
+    <div class="conversion-card">
+        <!-- Header -->
+        <div class="card-header">
+            <div class="header-icons-wrapper">
+                <div class="header-icon source"><i class="fas fa-file-pdf"></i></div>
+                <div class="header-icon-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="header-icon target"><i class="fas fa-trash-alt"></i></div>
+            </div>
+            <h1>Remove PDF Pages</h1>
+            <p>Delete specific pages from your PDF file easily.</p>
+        </div>
+
+        <div class="card-content">
+            <input #fileInput type="file" accept=".pdf" (change)="onFileChange($event)" hidden>
+
+            <!-- File Upload Section (Empty State) -->
+            <div class="upload-section" *ngIf="!selectedFile" (click)="fileInput.click()">
+                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <h3>Select PDF File</h3>
+                <p>or drag and drop here</p>
+                <span class="file-info-text">Supports .pdf files</span>
+            </div>
+
+            <!-- Selected File & Options -->
+            <div class="selected-state" *ngIf="selectedFile">
+                
+                <!-- File Banner -->
+                <div class="file-banner">
+                    <div class="file-info-row">
+                        <div class="file-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="file-details">
+                            <span class="file-name">{{ selectedFile.name }}</span>
+                            <span class="file-size">{{ formatBytes(selectedFile.size) }}</span>
+                        </div>
+                        <button class="icon-btn remove-btn" (click)="reset()" title="Remove file" [disabled]="isConverting">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-grid" *ngIf="!conversionResult">
+                    <!-- Custom Options Card -->
+                    <div class="options-card" style="margin-bottom: 0;">
+                        <div class="options-header">
+                            <i class="fas fa-sliders-h"></i>
+                            <h3>Removal Options</h3>
+                        </div>
+                        
+                        <div class="options-body">
+                            <!-- Pages to Remove Input -->
+                            <div class="form-group">
+                                <label>Pages to remove</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-layers-clear"></i>
+                                    <input type="text" [(ngModel)]="pagesToRemove" placeholder="e.g. 1, 3-5" [disabled]="isConverting">
+                                </div>
+                                <small>Specify individual pages or ranges separated by commas.</small>
+                            </div>
+                            
+                            <!-- Output Filename Input -->
+                            <div class="form-group">
+                                <label>Output Filename</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-file-signature"></i>
+                                    <input type="text" [(ngModel)]="outputFilename" placeholder="converted_file" [disabled]="isConverting">
+                                </div>
+                                <small>.pdf extension is preserved</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress & Status -->
+                <div class="status-section" *ngIf="isConverting || (conversionStatus && (conversionStatus.includes('✅') || conversionStatus.includes('❌') || conversionStatus.includes('successfully')))">
+                    <div class="progress-details">
+                        <span class="status-text" [class.success]="conversionStatus.includes('✅') || conversionStatus.includes('successfully')" [class.error]="conversionStatus.includes('❌') || conversionStatus.includes('failed')">
+                            {{ conversionStatus }}
+                        </span>
+                        <span *ngIf="isConverting" class="percentage">{{ uploadProgress }}%</span>
+                    </div>
+                    <div class="progress-bar-container" *ngIf="isConverting">
+                        <div class="progress-fill" [style.width.%]="uploadProgress"></div>
+                    </div>
+                </div>
+
+                <!-- Success State & Save Button -->
+                <div class="success-section" *ngIf="conversionResult">
+                    <div class="success-card">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>Pages Removed Successfully!</h3>
+                        <p>File <strong>{{ conversionResult.fileName }}</strong> is ready for download.</p>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-reset" (click)="reset()">
+                        Reset
+                    </button>
+
+                    <button class="btn-convert" (click)="convert()" [disabled]="isConverting || !pagesToRemove.trim()" *ngIf="!conversionResult">
+                        <span *ngIf="!isConverting">Remove Pages</span>
+                        <span *ngIf="isConverting"><i class="fas fa-spinner fa-spin"></i> Processing...</span>
+                    </button>
+
+                    <button class="btn-save" (click)="saveFile()" *ngIf="conversionResult">
+                        <i class="fas fa-download"></i> Save File
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

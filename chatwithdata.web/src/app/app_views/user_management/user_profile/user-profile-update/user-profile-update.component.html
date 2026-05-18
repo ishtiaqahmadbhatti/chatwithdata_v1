@@ -1,0 +1,102 @@
+<div class="profile-page">
+    <div class="profile-card">
+        <div class="header-section">
+            <div class="profile-image-section">
+                <div class="avatar-container">
+                    <img *ngIf="imagePreview" [src]="imagePreview" alt="Profile" class="avatar-img">
+                    <div *ngIf="!imagePreview" class="avatar-placeholder">{{ userInitials }}</div>
+
+                    <label class="camera-icon">
+                        <i class="fas fa-camera"></i>
+                        <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden>
+                    </label>
+                </div>
+            </div>
+            <h2>Personal Information</h2>
+            <p>Update your personal details below.</p>
+        </div>
+
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group half">
+                    <label>First Name</label>
+                    <input type="text" formControlName="first_name" class="form-control readonly-input" placeholder="First Name" readonly>
+                    <div *ngIf="profileForm.get('first_name')?.touched && profileForm.get('first_name')?.errors"
+                        class="error-msg">
+                        First Name is required
+                    </div>
+                </div>
+
+                <div class="form-group half">
+                    <label>Last Name</label>
+                    <input type="text" formControlName="last_name" class="form-control readonly-input" placeholder="Last Name" readonly>
+                    <div *ngIf="profileForm.get('last_name')?.touched && profileForm.get('last_name')?.errors"
+                        class="error-msg">
+                        Last Name is required
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number</label>
+                <div class="input-icon-wrapper phone-input-wrapper">
+                    <input #phoneInput type="tel" formControlName="phone" class="form-control phone-input"
+                        placeholder="+1234567890">
+                </div>
+                <div *ngIf="profileForm.get('phone')?.touched && profileForm.get('phone')?.errors" class="error-msg">
+                    Phone is required
+                </div>
+            </div>
+
+
+            <div class="form-group dropdown-container" #genderContainer>
+                <label>Gender</label>
+                <div class="custom-select-trigger form-control" (click)="toggleGenderDropdown()"
+                    [class.invalid]="profileForm.get('gender')?.touched && profileForm.get('gender')?.errors">
+                    {{ profileForm.get('gender')?.value || 'Select Gender' }}
+                    <i class="fas fa-chevron-down arrow"></i>
+                </div>
+
+                <div class="custom-dropdown-options" *ngIf="isGenderDropdownOpen">
+                    <div class="dropdown-item" *ngFor="let g of genders" (click)="selectGender(g)">
+                        {{ g }}
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" [disabled]="isLoading">
+                {{ isLoading ? 'Saving...' : 'Save Changes' }}
+            </button>
+        </form>
+    </div>
+
+    <!-- Image Cropper Modal -->
+    <div class="cropper-modal" *ngIf="showCropper">
+        <div class="cropper-overlay" (click)="cancelCrop()"></div>
+        <div class="cropper-container">
+            <div class="cropper-header">
+                <h3>Adjust Your Profile Picture</h3>
+                <button class="close-btn" (click)="cancelCrop()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="cropper-content">
+                <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="1"
+                    [roundCropper]="true" [canvasRotation]="0" [transform]="{}" [alignImage]="'center'"
+                    [backgroundColor]="'#f0f0f0'" format="jpeg" outputType="blob" (imageCropped)="imageCropped($event)"
+                    (imageLoaded)="imageLoaded($event)" (cropperReady)="cropperReady()"
+                    (loadImageFailed)="loadImageFailed()"></image-cropper>
+            </div>
+
+            <div class="cropper-footer">
+                <button class="btn-cancel" (click)="cancelCrop()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn-apply" (click)="applyCrop()">
+                    <i class="fas fa-check"></i> Apply
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

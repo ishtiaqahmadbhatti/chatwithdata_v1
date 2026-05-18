@@ -1,0 +1,264 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    background-color: #f7fafc;
+}
+
+.page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 6rem 0 8rem;
+    text-align: center;
+    color: white;
+    clip-path: ellipse(150% 100% at 50% 0%);
+    margin-bottom: -5rem;
+}
+
+.page-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.content-wrapper {
+    max-width: 800px;
+    margin: 0 auto 4rem;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 10;
+}
+
+.feedback-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Custom Dropdown Styles */
+.dropdown-container {
+    position: relative;
+    user-select: none;
+}
+
+.custom-select-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background-color: #f8fafc;
+}
+
+.custom-select-trigger.disabled {
+    background-color: #edf2f7;
+    cursor: not-allowed;
+    color: #a0aec0;
+}
+
+.custom-select-trigger .arrow {
+    margin-left: 10px;
+    font-size: 0.8rem;
+    transition: transform 0.2s;
+    color: #4a5568;
+}
+
+.custom-dropdown-options {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    max-height: 250px;
+    /* Limits height, forces scroll if needed */
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    /* Ensures it floats above */
+    animation: fadeIn 0.2s ease-out;
+}
+
+.dropdown-item {
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #2d3748;
+}
+
+.dropdown-item:hover {
+    background-color: #edf2f7;
+    color: #667eea;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scrollbar Styling for Dropdown */
+.custom-dropdown-options::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-dropdown-options::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.custom-dropdown-options::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+}
+
+.custom-dropdown-options::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background-color: #f8fafc;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #667eea;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Rating Stars */
+.rating-stars {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    color: #cbd5e0;
+    cursor: pointer;
+}
+
+.rating-stars i {
+    transition: color 0.2s;
+}
+
+.rating-stars i.active,
+.rating-stars i:hover,
+.rating-stars i:hover~i {
+    color: #f6ad55;
+}
+
+.rating-stars i.active,
+.rating-stars i:hover,
+.rating-stars i:hover~i {
+    color: #cbd5e0;
+    /* Default hover color before selection logic applied via class */
+}
+
+/* Dynamic Rating Colors (Low Shine to Full Shine) */
+.rating-stars.stars-1 i.active {
+    color: #fc8181;
+    text-shadow: 0 0 5px rgba(252, 129, 129, 0.4);
+}
+
+/* Red */
+.rating-stars.stars-2 i.active {
+    color: #f6ad55;
+    text-shadow: 0 0 8px rgba(246, 173, 85, 0.5);
+}
+
+/* Orange */
+.rating-stars.stars-3 i.active {
+    color: #f6e05e;
+    text-shadow: 0 0 10px rgba(246, 224, 94, 0.6);
+}
+
+/* Yellow */
+.rating-stars.stars-4 i.active {
+    color: #68d391;
+    text-shadow: 0 0 12px rgba(104, 211, 145, 0.7);
+}
+
+/* Green */
+.rating-stars.stars-5 i.active {
+    color: #48bb78;
+    text-shadow: 0 0 15px rgba(72, 187, 120, 0.8);
+}
+
+/* Bright Green */
+
+/* Hover Logic Override */
+.rating-stars:hover i {
+    color: #cbd5e0;
+}
+
+/* Reset */
+.rating-stars:hover i:hover,
+.rating-stars:hover i:hover~i {
+    color: inherit;
+}
+
+/* Difficult to do pure CSS progressive hover, sticking to selection colors */
+
+.error-msg {
+    color: #e53e3e;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 1rem;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+@media (max-width: 600px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}

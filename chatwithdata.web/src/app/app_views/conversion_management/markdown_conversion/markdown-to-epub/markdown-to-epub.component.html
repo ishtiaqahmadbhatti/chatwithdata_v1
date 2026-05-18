@@ -1,0 +1,15 @@
+<app-file-conversion-ui title="Markdown to ePUB" description="Convert Markdown to ePUB eBook format"
+    sourceIcon="fab fa-markdown" targetIcon="fas fa-book" allowedExtensions=".md"
+    allowedExtensionsText="Supports .md files" convertButtonText="Convert" [selectedFile]="selectedFile"
+    [isConverting]="isConverting" [conversionStatus]="conversionStatus" [conversionResult]="conversionResult"
+    (fileSelected)="onFileSelected($event)" (convert)="convert()" (reset)="reset()" (download)="saveFile()">
+
+    <div class="form-group" style="grid-column: 1 / -1;">
+        <label>Output Filename</label>
+        <div class="input-wrapper">
+            <i class="fas fa-book"></i>
+            <input type="text" [(ngModel)]="outputFilename" placeholder="converted">
+        </div>
+        <small>Extension is added automatically</small>
+    </div>
+</app-file-conversion-ui>

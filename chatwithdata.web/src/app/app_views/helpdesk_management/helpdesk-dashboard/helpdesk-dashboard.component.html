@@ -1,0 +1,33 @@
+<div class="helpdesk-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">Help Desk</h1>
+            <p class="page-subtitle">How can we help you today?</p>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <div class="cards-grid">
+            <a *ngFor="let option of helpOptions" [routerLink]="option.link" class="help-card"
+                [style.border-top-color]="option.color">
+                <div class="card-icon" [style.color]="option.color">
+                    <i [class]="option.icon"></i>
+                </div>
+                <h3 class="card-title">{{option.title}}</h3>
+                <p class="card-desc">{{option.description}}</p>
+                <div class="card-footer">
+                    <span>Go to {{option.title}}</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+
+        <div class="contact-card">
+            <div class="contact-content">
+                <h3>Still need help?</h3>
+                <p>Our support team is available 24/7 to assist you with any issues.</p>
+            </div>
+            <a routerLink="/contact-us" class="btn-contact">Contact Us</a>
+        </div>
+    </main>
+</div>

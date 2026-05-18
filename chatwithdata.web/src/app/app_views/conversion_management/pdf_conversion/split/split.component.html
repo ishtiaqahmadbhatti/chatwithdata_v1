@@ -1,0 +1,114 @@
+<div class="conversion-container">
+    <div class="conversion-card">
+        <!-- Header -->
+        <div class="card-header">
+            <div class="header-icons-wrapper">
+                <div class="header-icon source"><i class="fas fa-file-pdf"></i></div>
+                <div class="header-icon-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="header-icon target"><i class="fas fa-columns"></i></div>
+            </div>
+            <h1>Split PDF</h1>
+            <p>Split your PDF into multiple files by page ranges or extract all pages.</p>
+        </div>
+
+        <div class="card-content">
+            <input #fileInput type="file" accept=".pdf" (change)="onFileChange($event)" hidden>
+
+            <!-- File Upload Section (Empty State) -->
+            <div class="upload-section" *ngIf="!selectedFile" (click)="fileInput.click()">
+                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <h3>Select PDF File</h3>
+                <p>or drag and drop here</p>
+                <span class="file-info-text">Supports .pdf files</span>
+            </div>
+
+            <!-- Selected File & Options -->
+            <div class="options-section" *ngIf="selectedFile">
+                
+                <div class="selected-file-card">
+                    <div class="file-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="file-details">
+                        <span class="file-name">{{ selectedFile.name }}</span>
+                        <span class="file-size">{{ formatBytes(selectedFile.size) }}</span>
+                    </div>
+                    <button class="remove-btn" (click)="reset()" [disabled]="isConverting" title="Remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="form-grid" *ngIf="!conversionResult">
+                    <!-- Split Options -->
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Split Options</label>
+                        <div style="display: flex; gap: 20px; margin-top: 10px; margin-bottom: 15px;">
+                            <label style="display: flex; align-items: center; font-weight: normal; cursor: pointer;">
+                                <input type="radio" name="splitType" value="every_page" [(ngModel)]="splitType" style="margin-right: 8px;">
+                                Every page
+                            </label>
+                            <label style="display: flex; align-items: center; font-weight: normal; cursor: pointer;">
+                                <input type="radio" name="splitType" value="page_ranges" [(ngModel)]="splitType" style="margin-right: 8px;">
+                                Page ranges
+                            </label>
+                        </div>
+
+                        <div class="input-wrapper" *ngIf="splitType === 'page_ranges'">
+                            <i class="fas fa-list-ol"></i>
+                            <input type="text" [(ngModel)]="pageRanges" placeholder="e.g., 1-4,5,30,45-50">
+                        </div>
+                    </div>
+
+                    <!-- Output Filename -->
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Output Folder/Prefix</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-folder"></i>
+                            <input type="text" [(ngModel)]="outputFilename" placeholder="{{ selectedFile.name.replace('.pdf', '') }}">
+                        </div>
+                        <small>Used as the folder name or prefix for the split files</small>
+                    </div>
+                </div>
+
+                <!-- Progress & Status -->
+                <div class="status-section" *ngIf="isConverting || (conversionStatus && (conversionStatus.includes('✅') || conversionStatus.includes('❌') || conversionStatus.includes('successfully')))">
+                    <div class="progress-details">
+                        <span class="status-text" [class.success]="conversionStatus.includes('✅') || conversionStatus.includes('successfully')" [class.error]="conversionStatus.includes('❌') || conversionStatus.includes('failed')">
+                            {{ conversionStatus }}
+                        </span>
+                        <span *ngIf="isConverting" class="percentage">{{ uploadProgress }}%</span>
+                    </div>
+                    <div class="progress-bar-container" *ngIf="isConverting">
+                        <div class="progress-fill" [style.width.%]="uploadProgress"></div>
+                    </div>
+                </div>
+
+                <!-- Success State & Save Button -->
+                <div class="success-section" *ngIf="conversionResult">
+                    <div class="success-card">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>Files Split Successfully!</h3>
+                        <p>File <strong>{{ conversionResult.fileName }}</strong> is ready for download.</p>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-reset" (click)="reset()">
+                        Reset
+                    </button>
+
+                    <button class="btn-convert" (click)="convert()" [disabled]="isConverting" *ngIf="!conversionResult">
+                        <span *ngIf="!isConverting">Split PDF</span>
+                        <span *ngIf="isConverting"><i class="fas fa-spinner fa-spin"></i> Processing...</span>
+                    </button>
+
+                    <button class="btn-save" (click)="saveFile()" *ngIf="conversionResult">
+                        <i class="fas fa-download"></i> Save ZIP
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

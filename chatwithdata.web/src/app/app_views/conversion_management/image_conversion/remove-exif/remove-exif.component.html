@@ -1,0 +1,16 @@
+<app-file-conversion-ui title="Remove EXIF" description="Remove EXIF data from images"
+    sourceIcon="fas fa-camera" targetIcon="fas fa-file-image" allowedExtensions=".jpg,.jpeg,.png,.tiff"
+    allowedExtensionsText="Supports .jpg,.jpeg,.png,.tiff files" convertButtonText="Convert" [selectedFile]="selectedFile"
+    [isConverting]="isConverting" [conversionStatus]="conversionStatus" [uploadProgress]="uploadProgress"
+    [conversionResult]="conversionResult" (fileSelected)="onFileSelected($event)" (convert)="convert()"
+    (reset)="reset()" (download)="saveFile()">
+    <!-- Custom Options -->
+    <div class="form-group" style="grid-column: 1 / -1;">
+        <label>Output Filename</label>
+        <div class="input-wrapper">
+            <i class="fas fa-file-image"></i>
+            <input type="text" [(ngModel)]="outputFilename" placeholder="converted">
+        </div>
+        <small>Extension is added automatically</small>
+    </div>
+</app-file-conversion-ui>

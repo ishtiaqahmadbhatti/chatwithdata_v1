@@ -1,0 +1,139 @@
+/* Page Header / Hero Section */
+.page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding-top: 8rem;
+    /* Space for fixed navbar */
+    padding-bottom: 6rem;
+    /* Extra space for the curve/overlap */
+    text-align: center;
+    position: relative;
+    clip-path: ellipse(150% 100% at 50% 0%);
+    /* Creates a subtle curve at the bottom */
+}
+
+.page-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.last-updated {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    font-weight: 500;
+    inline-size: fit-content;
+    margin: 0 auto;
+    padding: 0.5rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Content Container */
+.content-wrapper {
+    max-width: 900px;
+    margin: -4rem auto 4rem;
+    /* Overlap header more noticeably */
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 10;
+}
+
+/* Section Cards */
+/* Section Cards */
+.section-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    /* Updated Shadow */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    /* Updated Border */
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.section-card:hover {
+    transform: translateY(-5px);
+    /* Stronger shadow with brand color tint on hover */
+    box-shadow: 0 15px 30px rgba(102, 126, 234, 0.15);
+    /* Brand color border on hover */
+    border-color: #667eea;
+}
+
+/* Section Header */
+.section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.icon-box {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+}
+
+.icon-box i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.section-title h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0;
+}
+
+.section-content {
+    color: #4a5568;
+    line-height: 1.7;
+    font-size: 1.05rem;
+    white-space: pre-line;
+    /* Preserve line breaks */
+    padding-left: calc(50px + 1.5rem);
+    /* Align with text start */
+}
+
+/* Mobile Responsiveness for Content Alignment */
+@media (max-width: 640px) {
+    .section-content {
+        padding-left: 0;
+        margin-top: 1rem;
+    }
+}
+
+/* Contact/Footer Section inside the page handled by global footer mostly, 
+   but specific contact info in privacy policy can stay styled */
+.contact-section {
+    text-align: center;
+    margin-top: 3rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.contact-link {
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.contact-link:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}

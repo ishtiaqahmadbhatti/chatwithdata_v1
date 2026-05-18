@@ -1,0 +1,53 @@
+<div class="conversion-tools-container">
+    <div class="tools-header">
+        <h1>{{ title }}</h1>
+        <p>{{ description }}</p>
+
+        <div class="header-controls">
+            <span class="tools-count">{{ tools.length }} Tools Available</span>
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
+                    [placeholder]="searchPlaceholder">
+            </div>
+        </div>
+    </div>
+
+    <div class="tools-grid">
+        @for (tool of filteredTools(); track tool.id) {
+        <div class="tool-card" [routerLink]="[tool.route]">
+            <div class="tool-icons-wrapper">
+                <div class="icon-box source">
+                    <i [class]="tool.sourceIcon"></i>
+                </div>
+                <div class="icon-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="icon-box target">
+                    <i [class]="tool.targetIcon"></i>
+                </div>
+            </div>
+            <h3>{{ tool.title }}</h3>
+            <p class="description-text" [class.expanded]="isExpanded(tool.id)">
+                @if (!isExpanded(tool.id) && tool.description.length > 60) {
+                {{ tool.description.substring(0, 60) }}...
+                <span class="read-more" (click)="toggleDescription($event, tool.id)">Show More</span>
+                } @else {
+                {{ tool.description }}
+                @if (tool.description.length > 60) {
+                <span class="read-more" (click)="toggleDescription($event, tool.id)">Show Less</span>
+                }
+                }
+            </p>
+        </div>
+        }
+
+        @if (filteredTools().length === 0) {
+        <div class="no-results">
+            <i class="fas fa-search"></i>
+            <h3>No tools found matching "{{ searchTerm() }}"</h3>
+            <p>Try using different keywords or browse all available tools.</p>
+        </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,54 @@
+<app-file-conversion-ui title="Audio to Text" description="Convert speech from audio files to text using AI"
+    sourceIcon="fas fa-microphone" targetIcon="fas fa-file-alt" allowedExtensions=".mp3,.wav,.flac,.m4a,.aac,.ogg"
+    allowedExtensionsText="Supports MP3, WAV, FLAC, M4A, AAC, OGG files" convertButtonText="Transcribe Audio"
+    [selectedFile]="selectedFile" [isConverting]="isConverting" [conversionStatus]="conversionStatus"
+    [uploadProgress]="uploadProgress" [conversionResult]="conversionResult" (fileSelected)="onFileSelected($event)"
+    (convert)="convert()" (reset)="reset()" (download)="saveFile()">
+
+    <!-- Custom Options: Language Selection -->
+    <div class="form-group" style="grid-column: 1 / -1;" *ngIf="!transcriptionResult">
+        <label>Select Language</label>
+        <div class="input-wrapper">
+            <i class="fas fa-language"></i>
+            <select [(ngModel)]="selectedLanguage" class="language-select">
+                <option *ngFor="let lang of languages" [value]="lang.code">
+                    {{ lang.name }}
+                </option>
+            </select>
+        </div>
+        <small>Choose the language spoken in the audio</small>
+    </div>
+
+    <!-- Transcription Result Display -->
+    <div class="transcription-section" *ngIf="transcriptionResult" style="grid-column: 1 / -1;">
+        <div class="transcription-header">
+            <h3><i class="fas fa-check-circle"></i> Transcription Complete</h3>
+            <div class="transcription-stats">
+                <span class="stat-item">
+                    <i class="fas fa-language"></i>
+                    {{ transcriptionResult.language }}
+                </span>
+                <span class="stat-item">
+                    <i class="fas fa-spell-check"></i>
+                    {{ transcriptionResult.word_count }} words
+                </span>
+                <span class="stat-item">
+                    <i class="fas fa-font"></i>
+                    {{ transcriptionResult.character_count }} characters
+                </span>
+            </div>
+        </div>
+
+        <div class="transcription-text-box">
+            <div class="text-header">
+                <span>Transcribed Text:</span>
+                <button class="copy-btn" (click)="copyToClipboard()" title="Copy to clipboard">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+            <div class="transcription-text">
+                {{ transcriptionResult.text }}
+            </div>
+        </div>
+    </div>
+</app-file-conversion-ui>

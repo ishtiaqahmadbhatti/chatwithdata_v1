@@ -1,0 +1,33 @@
+<app-file-conversion-ui title="PDF Metadata" description="View and extract PDF document properties and metadata"
+    sourceIcon="fas fa-info-circle" targetIcon="fas fa-file-pdf" allowedExtensions=".pdf"
+    allowedExtensionsText="Supports .pdf files" convertButtonText="Get Metadata" [selectedFile]="selectedFile"
+    [isConverting]="isConverting" [conversionStatus]="conversionStatus" [uploadProgress]="uploadProgress"
+    [conversionResult]="conversionResult" [keepContentVisible]="true" (fileSelected)="onFileSelected($event)" (convert)="convert()"
+    (reset)="reset()" (download)="saveFile()">
+
+    <!-- Metadata Display Section -->
+    <div class="metadata-display" *ngIf="metadataResult">
+        <div class="metadata-header">
+            <h3><i class="fas fa-list"></i> Extracted Metadata</h3>
+            <button class="btn-text-save" (click)="saveAsText()">
+                <i class="fas fa-file-alt"></i> Save as Text
+            </button>
+        </div>
+
+        <div class="metadata-grid">
+            <div class="metadata-item" *ngFor="let item of metadataResult | keyvalue">
+                <span class="metadata-label">{{ item.key }}</span>
+                <span class="metadata-value">{{ item.value || 'N/A' }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Options -->
+    <div class="form-group" style="grid-column: 1 / -1;" *ngIf="!metadataResult">
+        <label>Output Filename (for JSON/Text)</label>
+        <div class="input-wrapper">
+            <i class="fas fa-file-signature"></i>
+            <input type="text" [(ngModel)]="outputFilename" placeholder="metadata_report">
+        </div>
+    </div>
+</app-file-conversion-ui>

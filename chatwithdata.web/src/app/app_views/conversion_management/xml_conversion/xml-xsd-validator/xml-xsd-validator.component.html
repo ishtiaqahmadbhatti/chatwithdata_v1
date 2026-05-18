@@ -1,0 +1,45 @@
+<app-file-conversion-ui title="XML XSD Validator" description="Validate XML files against XSD schema or check syntax."
+    sourceIcon="fas fa-file-code" targetIcon="fas fa-check-circle" allowedExtensions=".xml"
+    allowedExtensionsText="Supports .xml files" convertButtonText="Validate" [selectedFile]="selectedXmlFile"
+    [isConverting]="isConverting" [conversionStatus]="statusMessage" [uploadProgress]="uploadProgress"
+    [conversionResult]="null" (fileSelected)="onXmlFileSelected($event)" (convert)="convert()"
+    (reset)="reset()">
+    
+    <!-- Custom Options: XSD Picker -->
+    <div class="xsd-picker-container" style="grid-column: 1 / -1; margin-top: 10px;">
+        <label>Select XSD File (Optional)</label>
+        <div class="xsd-picker" (click)="xsdInput.click()" [class.selected]="selectedXsdFile">
+            <input #xsdInput type="file" accept=".xsd" (change)="onXsdFileSelected($event)" hidden>
+            <div class="xsd-info">
+                <i class="fas fa-rule"></i>
+                <span class="xsd-name">{{ selectedXsdFile ? selectedXsdFile.name : 'Choose XSD File (Optional)' }}</span>
+            </div>
+            <div class="xsd-action">
+                <i class="fas fa-check-circle" *ngIf="selectedXsdFile" style="color: #10b981;"></i>
+                <i class="fas fa-plus" *ngIf="!selectedXsdFile"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div *ngIf="validationResultText" class="result-container" [class.valid]="isValid" [class.invalid]="!isValid" style="grid-column: 1 / -1; margin-top: 20px;">
+        <div class="result-header-card">
+            <div class="result-icon">
+                <i [class]="isValid ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle'"></i>
+            </div>
+            <h3>{{ isValid ? 'XML IS VALID' : 'XML IS INVALID' }}</h3>
+        </div>
+        
+        <div *ngIf="!isValid && validationResultText" class="error-details-box">
+            <div class="error-header-row">
+                <span>Error Details:</span>
+                <button class="mini-copy-btn" (click)="copyToClipboard()" title="Copy to clipboard">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+            <div class="error-content">
+                <pre>{{ parseErrorText(validationResultText) }}</pre>
+            </div>
+        </div>
+    </div>
+</app-file-conversion-ui>

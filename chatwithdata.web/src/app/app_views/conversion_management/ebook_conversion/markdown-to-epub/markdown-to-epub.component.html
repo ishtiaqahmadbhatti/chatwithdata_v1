@@ -1,0 +1,34 @@
+<app-file-conversion-ui title="Markdown to EPUB" description="Convert Markdown files to EPUB format"
+    sourceIcon="fas fa-file-alt" targetIcon="fas fa-book" allowedExtensions=".md,.markdown"
+    allowedExtensionsText="Supports .md,.markdown files" convertButtonText="Convert" [selectedFile]="selectedFile"
+    [isConverting]="isConverting" [conversionStatus]="conversionStatus" [uploadProgress]="uploadProgress"
+    [conversionResult]="conversionResult" (fileSelected)="onFileSelected($event)" (convert)="convert()"
+    (reset)="reset()" (download)="saveFile()">
+    <!-- Custom Options -->
+    <div class="form-group" style="grid-column: 1 / -1;">
+        <label>Book Title</label>
+        <div class="input-wrapper">
+            <i class="fas fa-heading"></i>
+            <input type="text" [(ngModel)]="bookTitle" placeholder="Converted Book">
+        </div>
+        <small>Enter the title for your eBook</small>
+    </div>
+
+    <div class="form-group" style="grid-column: 1 / -1;">
+        <label>Author Name</label>
+        <div class="input-wrapper">
+            <i class="fas fa-user-edit"></i>
+            <input type="text" [(ngModel)]="authorName" placeholder="Unknown">
+        </div>
+        <small>Enter the author name for your eBook</small>
+    </div>
+
+    <div class="form-group" style="grid-column: 1 / -1;">
+        <label>Output Filename</label>
+        <div class="input-wrapper">
+            <i class="fas fa-book"></i>
+            <input type="text" [(ngModel)]="outputFilename" placeholder="converted">
+        </div>
+        <small>Extension is added automatically</small>
+    </div>
+</app-file-conversion-ui>
