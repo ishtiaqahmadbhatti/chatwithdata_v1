@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     """Application settings and configuration."""
     
     # Application
-    app_name: str = "SmartConverter FastAPI"
+    app_name: str = "ChatWithData FastAPI"
     app_version: str = "1.0.0"
     debug: bool = False
     database_active: bool = True
@@ -102,7 +102,7 @@ class Settings(BaseSettings):
     MAIL_USERNAME: str = ""  # Set in .env file
     MAIL_PASSWORD: str = ""  # Set in .env file
     MAIL_FROM: str = ""  # Set in .env file
-    MAIL_FROM_NAME: str = "SmartConverter Helpdesk"
+    MAIL_FROM_NAME: str = "ChatWithData Helpdesk"
     HELPDESK_EMAIL: str = "techmindsforge@gmail.com"
     MAIL_PORT: int = 587
     MAIL_SERVER: str = "smtp.gmail.com"

@@ -45,7 +45,7 @@ app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
     description="""
-# SmartConverter FastAPI - Enterprise File Conversion & Processing Platform
+# ChatWithData FastAPI - Enterprise File Conversion & Processing Platform
 
 A comprehensive, enterprise-grade file conversion and manipulation platform supporting **20+ conversion types** and **50+ file formats** with advanced processing capabilities.
 

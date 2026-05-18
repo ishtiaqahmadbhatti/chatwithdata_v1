@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Startup script for Smart Converter FastAPI
+Startup script for ChatWithData FastAPI
 """
 
 import sys
@@ -29,7 +29,7 @@ def start_app():
     try:
         import uvicorn
 
-        print("Starting Smart Converter FastAPI...")
+        print("Starting ChatWithData FastAPI...")
         print("=" * 50)
         print(f"Python executable: {sys.executable}")
         print("Available endpoints:")
