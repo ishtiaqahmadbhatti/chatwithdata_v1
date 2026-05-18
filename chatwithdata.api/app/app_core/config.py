@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     
     # Server
     host: str = "0.0.0.0"
-    port: int = 8000
+    port: int = 8001
     
     # Directories — Lambda sets UPLOADS_DIR/OUTPUTS_DIR to /tmp/* via Dockerfile ENV
     upload_dir: str = os.environ.get("UPLOADS_DIR", "uploads")

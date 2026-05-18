@@ -33,14 +33,14 @@ def start_app():
         print("=" * 50)
         print(f"Python executable: {sys.executable}")
         print("Available endpoints:")
-        print("- Main API: http://192.168.100.12:8000/")
-        print("- API Documentation: http://192.168.100.12:8000/docs")
-        print("- ReDoc Documentation: http://192.168.100.12:8000/redoc")
-        print("- Health Check: http://192.168.100.12:8000/api/v1/health/")
+        print("- Main API: http://192.168.100.12:8001/")
+        print("- API Documentation: http://192.168.100.12:8001/docs")
+        print("- ReDoc Documentation: http://192.168.100.12:8001/redoc")
+        print("- Health Check: http://192.168.100.12:8001/api/v1/health/")
         print("\nFor mobile device access:")
-        print("- Physical Device: http://192.168.100.12:8000/")
-        print("- Android Emulator: http://10.0.2.2:8000/ (from app)")
-        print("- Mobile Docs: http://192.168.100.12:8000/docs")
+        print("- Physical Device: http://192.168.100.12:8001/")
+        print("- Android Emulator: http://10.0.2.2:8001/ (from app)")
+        print("- Mobile Docs: http://192.168.100.12:8001/docs")
         print("=" * 50)
         print("\nPDF Conversion Tools available at: /api/v1/pdfconversiontools/")
         print("General Conversion Tools available at: /api/v1/convert/")
@@ -53,7 +53,7 @@ def start_app():
         uvicorn.run(
             "app.main:app",
             host="0.0.0.0",
-            port=8000,
+            port=8001,
             log_level="info",
             reload=True,                          # ← Hot reload on every .py file save
             reload_dirs=["app"],                  # ← Only watch the app/ directory

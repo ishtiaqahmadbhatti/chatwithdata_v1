@@ -15,7 +15,7 @@ A professional, industry-level FastAPI application for file conversion with PDF-
 
 ## Project Structure
 
-```
+```text
 ├── app/
 │   ├── __init__.py
 │   ├── main.py                 # TechMindsForge FastAPI application entry point
@@ -84,6 +84,7 @@ cp .env.example .env
 ### 3. Install Tesseract OCR
 
 **Windows:**
+
 ```bash
 # Download and install Tesseract from:
 # https://github.com/UB-Mannheim/tesseract/wiki
@@ -91,11 +92,13 @@ cp .env.example .env
 ```
 
 **Linux:**
+
 ```bash
 sudo apt-get install tesseract-ocr tesseract-ocr-eng
 ```
 
 **macOS:**
+
 ```bash
 brew install tesseract
 ```
@@ -107,23 +110,22 @@ brew install tesseract
 python -m app.main
 
 # Or using uvicorn directly
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8001
 ```
 
 ### 5. Access the API
 
-- **API Documentation**: http://127.0.0.1:8000/docs
-- **ReDoc Documentation**: http://127.0.0.1:8000/redoc
-- **Health Check**: http://127.0.0.1:8000/api/v1/health
+- **API Documentation**: <http://127.0.0.1:8001/docs>
+- **ReDoc Documentation**: <http://127.0.0.1:8001/redoc>
+- **Health Check**: <http://127.0.0.1:8001/api/v1/health>
 
 ## API Endpoints
 
 ### Health Check
+
 ```http
 GET /api/v1/health
 ```
-
-
 
 ## Docker Deployment
 
@@ -144,7 +146,7 @@ docker-compose up -d --build
 docker build -t smart-convert-api .
 
 # Run the container
-docker run -p 8000:8000 -v $(pwd)/uploads:/app/uploads -v $(pwd)/outputs:/app/outputs smart-convert-api
+docker run -p 8001:8001 -v $(pwd)/uploads:/app/uploads -v $(pwd)/outputs:/app/outputs smart-convert-api
 ```
 
 ## Testing
