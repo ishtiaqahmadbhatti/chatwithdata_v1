@@ -34,7 +34,9 @@ export class HeaderComponent implements OnInit {
     { name: 'Markdown Conversion Tools', icon: 'fab fa-markdown', link: '/markdownconversion', type: 'route' },
     { name: 'Text Conversion Tools', icon: 'fas fa-font', link: '/textconversion', type: 'route' },
     { name: 'E-Book Conversion Tools', icon: 'fas fa-book', link: '/ebookconversion', type: 'route' },
-    { name: 'File Formatter Tools', icon: 'fas fa-wrench', link: '/fileformatter', type: 'route' }
+    { name: 'File Formatter Tools', icon: 'fas fa-wrench', link: '/fileformatter', type: 'route' },
+    { name: 'YouTube Tools', icon: 'fab fa-youtube', link: '/youtubetools', type: 'route' },
+    { name: 'Agentic RAG', icon: 'fas fa-brain', link: '/ragtools', type: 'route' }
   ];
 
   constructor(public authService: AuthService, private eRef: ElementRef) { }

@@ -15,8 +15,8 @@ export const appConfig: ApplicationConfig = {
 };
 
 export class ApplicationConfiguration {
-  public ServerBaseUrl: string = 'https://chatwithdataapi.techmindsforge.com';
-  //public ServerBaseUrl: string = 'http://192.168.100.12:8000';
+  //public ServerBaseUrl: string = 'https://chatwithdataapi.techmindsforge.com';
+  public ServerBaseUrl: string = 'http://192.168.100.12:8001';
   public ApiServiceLink: string = this.ServerBaseUrl + '/api/v1';
   public WebSiteLink: string = 'https://techmindsforge.com/';
 

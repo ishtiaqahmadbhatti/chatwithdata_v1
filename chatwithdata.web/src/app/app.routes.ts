@@ -120,6 +120,14 @@ export const AppRoutes: Routes = [
     loadComponent: () => import('./app_views/conversion_management/tools-category/tools-category.component').then(c => c.ToolsCategoryComponent)
   },
   {
+    path: 'youtubetools',
+    loadChildren: () => import('./app_views/conversion_management/youtube_tools/youtube_tools.routes').then(r => r.YOUTUBE_TOOLS_ROUTES),
+  },
+  {
+    path: 'ragtools',
+    loadChildren: () => import('./app_views/conversion_management/agentic_rag/agentic_rag.routes').then(r => r.AGENTIC_RAG_ROUTES),
+  },
+  {
     path: 'helpdesk',
     loadChildren: () => import('./app_views/helpdesk_management/helpdesk_management.routes').then(r => r.HelpdeskManagementRoutes)
   },

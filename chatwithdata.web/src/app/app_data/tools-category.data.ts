@@ -150,5 +150,23 @@ export const TOOLS_CATEGORIES: ToolCategory[] = [
         route: '/markdownconversion',
         count: MARKDOWN_CONVERSION_TOOLS.length,
         colorClass: 'text-indigo-600'
+    },
+    {
+        id: 'youtube',
+        title: 'YouTube Tools',
+        description: 'Extract description, comments, metadata, and download videos in high quality.',
+        icon: 'fab fa-youtube',
+        route: '/youtubetools',
+        count: 2,
+        colorClass: 'text-red-600'
+    },
+    {
+        id: 'rag',
+        title: 'Agentic RAG',
+        description: 'Index YouTube videos and talk directly to transcripts with context-aware AI.',
+        icon: 'fas fa-brain',
+        route: '/ragtools',
+        count: 4,
+        colorClass: 'text-indigo-500'
     }
 ];

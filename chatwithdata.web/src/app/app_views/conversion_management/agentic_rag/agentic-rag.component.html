@@ -1,0 +1,159 @@
+<div class="rag-dashboard">
+  <!-- Left Panel: Ingested Sessions -->
+  <aside class="sessions-sidebar">
+    <div class="sidebar-header">
+      <h3><i class="fas fa-brain"></i> Active RAG Sessions</h3>
+      <span class="session-count">{{ sessions.length }} video(s)</span>
+    </div>
+    
+    <div class="sessions-list-wrapper">
+      <div class="loading-sessions" *ngIf="isLoadingSessions">
+        <i class="fas fa-circle-notch fa-spin"></i>
+        <span>Syncing sessions...</span>
+      </div>
+
+      <div class="empty-sessions" *ngIf="!isLoadingSessions && sessions.length === 0">
+        <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+        <p>No ingested videos yet.</p>
+        <small>Use the top bar to ingest a video and start querying.</small>
+      </div>
+
+      <ul class="sessions-list" *ngIf="!isLoadingSessions && sessions.length > 0">
+        <li 
+          *ngFor="let session of sessions" 
+          [class.active]="activeSession && activeSession.video_id === session.video_id"
+          (click)="selectSession(session)"
+        >
+          <div class="session-thumb">
+            @if (session.thumbnail) {
+              <img [src]="session.thumbnail" alt="Thumb">
+            } @else {
+              <i class="fab fa-youtube"></i>
+            }
+          </div>
+          <div class="session-info">
+            <span class="session-title" [title]="session.title">{{ session.title || 'Untitled Video' }}</span>
+            <span class="session-id">ID: {{ session.video_id }}</span>
+          </div>
+          <button class="btn-delete" (click)="removeSession(session, $event)" title="Delete Session">
+            <i class="far fa-trash-alt"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- Main Chat Workspace -->
+  <main class="chat-workspace">
+    <!-- Top Ingestion Bar -->
+    <header class="ingestion-header">
+      <div class="ingest-input-group">
+        <i class="fab fa-youtube input-yt-icon"></i>
+        <input 
+          type="text" 
+          [(ngModel)]="videoUrl" 
+          placeholder="Ingest a YouTube video URL to analyze (e.g. https://www.youtube.com/watch?v=...)"
+          [disabled]="isIngesting"
+          (keyup.enter)="ingestVideo()"
+        />
+        <button class="btn-ingest" (click)="ingestVideo()" [disabled]="isIngesting || !videoUrl">
+          @if (isIngesting) {
+            <i class="fas fa-spinner fa-spin"></i> Ingesting...
+          } @else {
+            <i class="fas fa-plus"></i> Ingest
+          }
+        </button>
+      </div>
+    </header>
+
+    <!-- Chat Area -->
+    <div class="chat-body-container">
+      <!-- Empty Onboarding State -->
+      <div class="onboarding-container" *ngIf="!activeSession">
+        <div class="onboarding-card">
+          <div class="onboarding-icon"><i class="fas fa-robot"></i></div>
+          <h2>Interact with Any Video via AI RAG</h2>
+          <p>Supercharge your learning by asking intelligent, context-aware questions directly to a YouTube video transcript.</p>
+          <div class="steps">
+            <div class="step-item">
+              <span class="step-num">1</span>
+              <span>Paste a YouTube link in the top input and click <strong>Ingest</strong></span>
+            </div>
+            <div class="step-item">
+              <span class="step-num">2</span>
+              <span>Wait for the AI to index the transcript, metadata, and comments</span>
+            </div>
+            <div class="step-item">
+              <span class="step-num">3</span>
+              <span>Select the video from the sidebar and start asking questions!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Chat Window -->
+      <div class="chat-window" *ngIf="activeSession">
+        <!-- Loaded Video Meta -->
+        <div class="active-video-bar">
+          <div class="meta-thumb" *ngIf="activeSession.thumbnail">
+            <img [src]="activeSession.thumbnail" alt="Thumb">
+          </div>
+          <div class="meta-details">
+            <h4>{{ activeSession.title }}</h4>
+            <span>Active Session Video ID: <strong>{{ activeSession.video_id }}</strong></span>
+          </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="messages-container" #chatScrollContainer>
+          <div 
+            *ngFor="let msg of chatHistory" 
+            class="message-bubble-wrapper"
+            [class.user]="msg.sender === 'user'"
+            [class.ai]="msg.sender === 'ai'"
+          >
+            <div class="avatar">
+              @if (msg.sender === 'ai') {
+                <i class="fas fa-robot"></i>
+              } @else {
+                <i class="fas fa-user"></i>
+              }
+            </div>
+            <div class="bubble-content">
+              <div class="message-text">{{ msg.text }}</div>
+              <div class="message-time">{{ msg.timestamp | date:'shortTime' }}</div>
+            </div>
+          </div>
+
+          <!-- Typing Indicator -->
+          <div class="message-bubble-wrapper ai" *ngIf="isQuerying">
+            <div class="avatar"><i class="fas fa-robot"></i></div>
+            <div class="bubble-content thinking">
+              <div class="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Input Bar -->
+        <footer class="chat-input-bar">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              [(ngModel)]="queryText" 
+              placeholder="Ask a question about this video (e.g. 'What are the main takeaways?')"
+              [disabled]="isQuerying"
+              (keyup.enter)="sendQuery()"
+            />
+            <button class="btn-send" (click)="sendQuery()" [disabled]="isQuerying || !queryText.trim()">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </main>
+</div>

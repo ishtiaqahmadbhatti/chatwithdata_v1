@@ -1,0 +1,189 @@
+<div class="youtube-tools-container">
+  <div class="hero-section">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="badge"><i class="fab fa-youtube"></i> YouTube Tools</div>
+      <h1>Powerfully Extract & Download YouTube Media</h1>
+      <p>Analyze metadata, extract transcripts, and download videos in high definition with a single click.</p>
+    </div>
+  </div>
+
+  <div class="workspace-card">
+    <div class="input-group-wrapper">
+      <label for="youtube-url"><i class="fas fa-link"></i> YouTube Video URL</label>
+      <div class="input-bar">
+        <input 
+          id="youtube-url" 
+          type="text" 
+          [(ngModel)]="videoUrl" 
+          placeholder="e.g., https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+          [disabled]="isExtracting || isDownloading"
+        />
+        <div class="action-buttons">
+          <button 
+            class="btn btn-extract" 
+            (click)="extractData()" 
+            [disabled]="isExtracting || isDownloading || !videoUrl"
+          >
+            @if (isExtracting) {
+              <i class="fas fa-spinner fa-spin"></i> Extracting...
+            } @else {
+              <i class="fas fa-search"></i> Extract Data
+            }
+          </button>
+          
+          <button 
+            class="btn btn-download" 
+            (click)="downloadVideo()" 
+            [disabled]="isExtracting || isDownloading || !videoUrl"
+          >
+            @if (isDownloading) {
+              <i class="fas fa-spinner fa-spin"></i> Downloading...
+            } @else {
+              <i class="fas fa-download"></i> Download Video
+            }
+          </button>
+        </div>
+      </div>
+      
+      <div class="download-options" *ngIf="videoUrl">
+        <label for="quality-select"><i class="fas fa-sliders-h"></i> Preferred Quality:</label>
+        <select id="quality-select" [(ngModel)]="quality" [disabled]="isDownloading">
+          <option value="highest">Highest Quality Available</option>
+          <option value="720p">720p (HD)</option>
+          <option value="480p">480p (Medium)</option>
+          <option value="audio">Audio Only (MP3/M4A)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Progress bar for downloading -->
+    <div class="progress-container" *ngIf="isDownloading">
+      <div class="progress-bar-wrapper">
+        <div class="progress-bar" [style.width.%]="downloadProgress"></div>
+      </div>
+      <div class="progress-text">Preparing video conversion... {{ downloadProgress }}%</div>
+    </div>
+  </div>
+
+  <!-- Loading Skeleton for Extraction -->
+  <div class="skeleton-container" *ngIf="isExtracting">
+    <div class="skeleton-player"></div>
+    <div class="skeleton-details">
+      <div class="skeleton-line title"></div>
+      <div class="skeleton-line text"></div>
+      <div class="skeleton-line text"></div>
+    </div>
+  </div>
+
+  <!-- Main Output Section -->
+  <div class="output-grid" *ngIf="videoData && !isExtracting">
+    <div class="video-preview-card">
+      <div class="player-wrapper">
+        @if (getEmbedUrl()) {
+          <iframe 
+            [src]="getEmbedUrl()!" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen
+          ></iframe>
+        } @else if (videoData.thumbnail) {
+          <img [src]="videoData.thumbnail" alt="Video Thumbnail" class="fallback-thumbnail">
+        }
+      </div>
+      
+      <div class="video-meta-info">
+        <h2 class="video-title">{{ videoData.title || 'YouTube Video' }}</h2>
+        <div class="channel-info">
+          <i class="fas fa-user-circle"></i>
+          <span>{{ videoData.channel_name || videoData.author || 'Unknown Channel' }}</span>
+        </div>
+        
+        <div class="stats-row">
+          <div class="stat-badge">
+            <i class="fas fa-eye"></i>
+            <span>{{ videoData.views | number }} views</span>
+          </div>
+          <div class="stat-badge" *ngIf="videoData.duration">
+            <i class="fas fa-clock"></i>
+            <span>{{ videoData.duration }}</span>
+          </div>
+          <div class="stat-badge" *ngIf="videoData.publish_date">
+            <i class="fas fa-calendar-alt"></i>
+            <span>{{ videoData.publish_date }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="interactive-content-card">
+      <div class="tab-header">
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'details'" 
+          (click)="activeTab = 'details'"
+        >
+          <i class="fas fa-info-circle"></i> Overview
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'transcript'" 
+          (click)="activeTab = 'transcript'"
+          *ngIf="videoData.transcript || videoData.transcription"
+        >
+          <i class="fas fa-file-alt"></i> Transcript
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'comments'" 
+          (click)="activeTab = 'comments'"
+          *ngIf="videoData.comments && videoData.comments.length > 0"
+        >
+          <i class="fas fa-comments"></i> Comments ({{ videoData.comments.length }})
+        </button>
+      </div>
+
+      <div class="tab-body">
+        <!-- Overview Tab -->
+        <div class="tab-pane" *ngIf="activeTab === 'details'">
+          <h3>Video Description</h3>
+          <div class="description-content">
+            <p>{{ videoData.description || 'No description available for this video.' }}</p>
+          </div>
+          
+          <div class="metadata-grid" *ngIf="videoData.tags && videoData.tags.length > 0">
+            <h3>Tags / Keywords</h3>
+            <div class="tags-wrapper">
+              <span class="tag" *ngFor="let tag of videoData.tags">#{{ tag }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transcript Tab -->
+        <div class="tab-pane transcript-pane" *ngIf="activeTab === 'transcript'">
+          <h3>Interactive Video Transcript</h3>
+          <div class="transcript-box">
+            <p>{{ videoData.transcript || videoData.transcription }}</p>
+          </div>
+        </div>
+
+        <!-- Comments Tab -->
+        <div class="tab-pane comments-pane" *ngIf="activeTab === 'comments'">
+          <h3>Top Discussion Threads</h3>
+          <div class="comments-list">
+            <div class="comment-item" *ngFor="let comment of videoData.comments">
+              <div class="comment-user">
+                <i class="fas fa-comment-dots"></i>
+                <strong>{{ comment.author || 'Anonymous User' }}</strong>
+                <span class="comment-likes" *ngIf="comment.likes !== undefined">
+                  <i class="fas fa-thumbs-up"></i> {{ comment.likes }}
+                </span>
+              </div>
+              <p class="comment-text">{{ comment.text || comment.content }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
