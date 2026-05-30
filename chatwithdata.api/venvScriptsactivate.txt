@@ -5,3 +5,5 @@ uv add -r requirements.txt
 python start_app.py
 
 D:\chatwithdata_v1\chatwithdata.api>npx @modelcontextprotocol/inspector python mcpserver.py
+
+AIzaSyDlDuPavRH05AjPkUdZ6fkad_bJ5dh2e9k

@@ -2,6 +2,7 @@ import { Component, OnInit, inject, ViewChild, ElementRef, AfterViewChecked } fr
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RagToolsService } from '../../../app_services/rag_tools.service';
+import { YoutubeToolsService } from '../../../app_services/youtube_tools.service';
 import { ToastService } from '../../../app_services/toast';
 
 interface Message {
@@ -21,6 +22,7 @@ export class AgenticRagComponent implements OnInit, AfterViewChecked {
   @ViewChild('chatScrollContainer') private chatScrollContainer!: ElementRef;
 
   private ragService = inject(RagToolsService);
+  private youtubeService = inject(YoutubeToolsService);
   private toastService = inject(ToastService);
 
   // Ingestion State
@@ -66,28 +68,42 @@ export class AgenticRagComponent implements OnInit, AfterViewChecked {
     }
 
     this.isIngesting = true;
-    this.ragService.ingestVideo(this.videoUrl).subscribe({
-      next: (res) => {
-        this.isIngesting = false;
-        this.videoUrl = '';
-        this.toastService.show('Video ingested and indexed successfully!', 'success');
-        this.loadSessions();
+    
+    // Step 1: Extract Video Metadata, Transcript, and Comments
+    this.youtubeService.extractData(this.videoUrl).subscribe({
+      next: (extractedData) => {
+        this.toastService.show('Video extracted! Building AI index...', 'success');
         
-        // Auto-select the newly ingested video
-        if (res && res.video_id) {
-          this.selectSession({
-            video_id: res.video_id,
-            title: res.title || 'Ingested Video',
-            thumbnail: res.thumbnail
-          });
-        } else if (res && res.session) {
-          this.selectSession(res.session);
-        }
+        // Step 2: Push Extracted Data into FAISS/Agentic RAG
+        this.ragService.ingestVideo({ data: extractedData }).subscribe({
+          next: (res) => {
+            this.isIngesting = false;
+            this.videoUrl = '';
+            this.toastService.show('Video ingested and indexed successfully!', 'success');
+            this.loadSessions();
+            
+            // Auto-select the newly ingested video
+            if (res && res.video_id) {
+              this.selectSession({
+                video_id: res.video_id,
+                title: res.title || extractedData.title || 'Ingested Video',
+                thumbnail: res.thumbnail || extractedData.thumbnail
+              });
+            } else if (res && res.session) {
+              this.selectSession(res.session);
+            }
+          },
+          error: (err) => {
+            console.error('Ingestion error:', err);
+            this.isIngesting = false;
+            this.toastService.show(err?.error?.detail || 'Failed to ingest video into AI', 'error');
+          }
+        });
       },
       error: (err) => {
-        console.error('Ingestion error:', err);
+        console.error('Extraction error:', err);
         this.isIngesting = false;
-        this.toastService.show(err?.error?.detail || 'Failed to ingest video', 'error');
+        this.toastService.show(err?.error?.detail || 'Failed to extract YouTube metadata', 'error');
       }
     });
   }

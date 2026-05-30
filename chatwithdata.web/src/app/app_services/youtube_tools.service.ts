@@ -15,16 +15,21 @@ export class YoutubeToolsService {
     }
 
     extractData(videoUrl: string): Observable<any> {
-        return this.http.post(`${this.apiUrl}/youtubetools/extract-data`, {
-            video_url: videoUrl
-        });
+        const formData = new FormData();
+        formData.append('url', videoUrl);
+        return this.http.post(`${this.apiUrl}/youtubetools/extract-data`, formData);
     }
 
     downloadVideo(videoUrl: string, quality: string = 'highest'): Observable<any> {
-        return this.http.post(`${this.apiUrl}/youtubetools/download`, {
-            video_url: videoUrl,
-            quality: quality
-        });
+        const formData = new FormData();
+        formData.append('url', videoUrl);
+        
+        // Map frontend "highest" to backend "best" requirement
+        const mappedQuality = quality === 'highest' ? 'best' : quality;
+        formData.append('quality', mappedQuality);
+        formData.append('output_format', 'mp4');
+        
+        return this.http.post(`${this.apiUrl}/youtubetools/download`, formData);
     }
 
     downloadFile(filename: string): Observable<Blob> {

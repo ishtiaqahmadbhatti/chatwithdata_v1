@@ -19,12 +19,12 @@ export class YoutubeToolsComponent {
 
   videoUrl: string = '';
   quality: string = 'highest';
-  
+
   // Loading states
   isExtracting: boolean = false;
   isDownloading: boolean = false;
   downloadProgress: number = 0;
-  
+
   // Extracted Data
   videoData: any = null;
   activeTab: string = 'details';
@@ -34,13 +34,14 @@ export class YoutubeToolsComponent {
       this.toastService.show('Please enter a YouTube video URL', 'error');
       return;
     }
-    
+
     this.isExtracting = true;
     this.videoData = null;
-    
+
     this.youtubeService.extractData(this.videoUrl).subscribe({
       next: (res) => {
-        this.videoData = res;
+        debugger;
+        this.videoData = res.data;
         this.isExtracting = false;
         this.toastService.show('YouTube data extracted successfully!', 'success');
       },
@@ -57,10 +58,10 @@ export class YoutubeToolsComponent {
       this.toastService.show('Please enter a YouTube video URL', 'error');
       return;
     }
-    
+
     this.isDownloading = true;
     this.downloadProgress = 20;
-    
+
     this.youtubeService.downloadVideo(this.videoUrl, this.quality).subscribe({
       next: (res) => {
         this.downloadProgress = 60;
@@ -77,12 +78,12 @@ export class YoutubeToolsComponent {
               a.click();
               window.URL.revokeObjectURL(url);
               document.body.removeChild(a);
-              
+
               setTimeout(() => {
                 this.isDownloading = false;
                 this.downloadProgress = 0;
               }, 1000);
-              
+
               this.toastService.show('Video downloaded successfully!', 'success');
             },
             error: (err) => {

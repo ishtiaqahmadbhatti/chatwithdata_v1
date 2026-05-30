@@ -12,16 +12,14 @@ export class RagToolsService {
         this.apiUrl = config.ApiServiceLink;
     }
 
-    ingestVideo(videoUrl: string): Observable<any> {
-        return this.http.post(`${this.apiUrl}/ragtools/ingest`, {
-            video_url: videoUrl
-        });
+    ingestVideo(videoData: any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/ragtools/ingest`, videoData);
     }
 
     queryVideo(videoId: string, query: string): Observable<any> {
         return this.http.post(`${this.apiUrl}/ragtools/query`, {
             video_id: videoId,
-            query: query
+            question: query
         });
     }
 

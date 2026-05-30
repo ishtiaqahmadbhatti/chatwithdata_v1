@@ -26,8 +26,7 @@ async def extract_youtube_data(
     db: Session = Depends(get_db)
 ):
     """
-    Extract comprehensive data from a YouTube video including metadata,
-    transcript, and comments.
+    Extract comprehensive data from a YouTube video including metadata, transcript, and comments.
     """
     log_id = None
     try:
