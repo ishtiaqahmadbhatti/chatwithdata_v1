@@ -11,7 +11,7 @@ Endpoints:
 import logging
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 from app.app_services.rag_service import ingest_youtube_data, list_sessions, delete_session
 from app.app_services.agent_service import run_rag_query
@@ -29,14 +29,55 @@ class IngestRequest(BaseModel):
     data: Optional[Dict[str, Any]] = None
     video_data: Optional[Dict[str, Any]] = None
 
+
+class IngestResponse(BaseModel):
+    success: bool
+    message: str
+    video_id: str
+    chunks_ingested: int
+    collection: str
+
+
 class QueryRequest(BaseModel):
     video_id: str
     question: str
 
 
+class SourceUsed(BaseModel):
+    source: str
+    snippet: str
+
+
+class QueryResponse(BaseModel):
+    success: bool
+    video_id: str
+    question: str
+    original_question: str
+    answer: str
+    sources_used: List[SourceUsed]
+    docs_retrieved: int
+
+
+class SessionInfo(BaseModel):
+    video_id: str
+    collection: str
+    status: str
+
+
+class SessionsResponse(BaseModel):
+    success: bool
+    sessions: List[SessionInfo]
+    total: int
+
+
+class DeleteSessionResponse(BaseModel):
+    success: bool
+    message: str
+
+
 # ── 1. Ingest ──────────────────────────────────────────────────────────────────
 
-@router.post("/ingest")
+@router.post("/ingest", response_model=IngestResponse)
 async def ingest_video(
     body: IngestRequest,
     request: Request
@@ -75,7 +116,7 @@ async def ingest_video(
 
 # ── 2. Query ───────────────────────────────────────────────────────────────────
 
-@router.post("/query")
+@router.post("/query", response_model=QueryResponse)
 async def query_video(
     body: QueryRequest,
     request: Request
@@ -115,7 +156,7 @@ async def query_video(
 
 # ── 3. List Sessions ───────────────────────────────────────────────────────────
 
-@router.get("/sessions")
+@router.get("/sessions", response_model=SessionsResponse)
 async def get_sessions():
     """List all ingested YouTube video sessions available for RAG queries."""
     sessions = list_sessions()
@@ -128,7 +169,7 @@ async def get_sessions():
 
 # ── 4. Delete Session ──────────────────────────────────────────────────────────
 
-@router.delete("/sessions/{video_id}")
+@router.delete("/sessions/{video_id}", response_model=DeleteSessionResponse)
 async def remove_session(video_id: str):
     """Delete a video's FAISS index to free up space."""
     deleted = delete_session(video_id)
