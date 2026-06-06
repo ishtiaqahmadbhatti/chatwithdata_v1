@@ -9,14 +9,10 @@ Endpoints:
 """
 
 import logging
-from fastapi import APIRouter, Depends, Request
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Request
 from pydantic import BaseModel
-from typing import Optional, List, Dict, Any
-from sqlalchemy.orm import Session
+from typing import Optional, Dict, Any
 
-from app.app_core.database import get_db
-from app.app_api.v1.dependencies import get_user_id
 from app.app_services.rag_service import ingest_youtube_data, list_sessions, delete_session
 from app.app_services.agent_service import run_rag_query
 from app.app_core.exceptions import create_error_response
@@ -43,8 +39,7 @@ class QueryRequest(BaseModel):
 @router.post("/ingest")
 async def ingest_video(
     body: IngestRequest,
-    request: Request,
-    db: Session = Depends(get_db)
+    request: Request
 ):
     """
     Ingest YouTube video data into FAISS for RAG queries.
@@ -83,8 +78,7 @@ async def ingest_video(
 @router.post("/query")
 async def query_video(
     body: QueryRequest,
-    request: Request,
-    db: Session = Depends(get_db)
+    request: Request
 ):
     """
     Query a YouTube video using Agentic RAG (LangGraph + Ollama).

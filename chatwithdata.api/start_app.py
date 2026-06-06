@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Startup script for ChatWithData FastAPI
+Startup script for ChatWithData FastAPI (YouTube Tools & RAG ONLY)
 """
 
 import sys
@@ -14,10 +14,7 @@ os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 # Suppress all Python-level warnings globally
 warnings.filterwarnings("ignore")
 
-
 # Silence noisy third-party loggers
-logging.getLogger("weasyprint").setLevel(logging.CRITICAL)
-logging.getLogger("fontTools").setLevel(logging.CRITICAL)
 logging.getLogger("urllib3").setLevel(logging.CRITICAL)
 
 # Add current directory to Python path
@@ -29,27 +26,22 @@ def start_app():
     try:
         import uvicorn
 
-        print("Starting ChatWithData FastAPI...")
-        print("=" * 50)
+        print("Starting ChatWithData FastAPI (YouTube & RAG ONLY)...")
+        print("=" * 60)
         print(f"Python executable: {sys.executable}")
         print("Available endpoints:")
-        print("- Main API: http://192.168.100.12:8001/")
-        print("- API Documentation: http://192.168.100.12:8001/docs")
-        print("- ReDoc Documentation: http://192.168.100.12:8001/redoc")
-        print("- Health Check: http://192.168.100.12:8001/api/v1/health/")
-        print("\nFor mobile device access:")
-        print("- Physical Device: http://192.168.100.12:8001/")
-        print("- Android Emulator: http://10.0.2.2:8001/ (from app)")
-        print("- Mobile Docs: http://192.168.100.12:8001/docs")
-        print("=" * 50)
-        print("\nPDF Conversion Tools available at: /api/v1/pdfconversiontools/")
-        print("General Conversion Tools available at: /api/v1/convert/")
-        print("\n🔥 Hot Reload: ENABLED — changes auto-apply on file save")
-        print("\nPress Ctrl+C to stop the server")
-        print("=" * 50)
+        print("- Main API Gateway:    http://127.0.0.1:8001/")
+        print("- API Documentation:   http://127.0.0.1:8001/docs")
+        print("- ReDoc Documentation: http://127.0.0.1:8001/redoc")
+        print("\nFeatures active:")
+        print("- YouTube Tools:       /api/v1/youtubetools/")
+        print("- Agentic RAG Search:  /api/v1/ragtools/")
+        print("=" * 60)
+        print("🔥 Hot Reload: ENABLED — changes auto-apply on file save")
+        print("Press Ctrl+C to stop the server")
+        print("=" * 60)
 
-        # NOTE: reload=True requires the app to be passed as a STRING "module:attr"
-        # NOT as an imported object — uvicorn needs to re-import it in worker processes.
+        # reload=True requires the app to be passed as a STRING "module:attr"
         uvicorn.run(
             "app.main:app",
             host="0.0.0.0",
@@ -57,7 +49,7 @@ def start_app():
             log_level="info",
             reload=True,                          # ← Hot reload on every .py file save
             reload_dirs=["app"],                  # ← Only watch the app/ directory
-            reload_excludes=["*.pyc", "__pycache__", "uploads", "outputs"],
+            reload_excludes=["*.pyc", "__pycache__", "uploads", "outputs", "faiss_db"],
         )
 
     except Exception as e:

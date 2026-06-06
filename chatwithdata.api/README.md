@@ -1,228 +1,155 @@
 # ChatWithData FastAPI 🚀
 
-A professional, industry-level FastAPI application for file conversion with PDF-to-Word and OCR capabilities.
+A professional, industry-level FastAPI backend application dedicated to **YouTube Tools** (metadata, transcripts, comment fetching, and video downloading) and **Agentic RAG** (local indexing, query routing, and answer synthesis using LangGraph, LangChain, and Ollama).
 
 ## Features
 
-- **PDF to Word Conversion**: Convert PDF documents to Word format
-- **OCR (Optical Character Recognition)**: Extract text from images
-- **Professional Architecture**: Clean, modular, and scalable code structure
-- **Type Safety**: Full Pydantic validation and type hints
-- **Error Handling**: Comprehensive error handling and logging
-- **Testing**: Unit tests with pytest
-- **Docker Support**: Containerized deployment
-- **API Documentation**: Auto-generated OpenAPI/Swagger docs
+- **YouTube Data Extraction**: Retrieve comprehensive video details including transcripts, description, comment threads, and metadata.
+- **YouTube Media Downloader**: Download video or audio tracks directly via custom formats and quality metrics (via `yt-dlp`).
+- **Local Agentic RAG**: Ingest transcripts and comment datasets into a local vector store (**FAISS**) and query using a smart LLM agent workflow (**LangGraph** + **Ollama**).
+- **Dual-Database Support Ready**: Configured for lightweight offline development or integration with AWS S3 storage for download caches.
+- **Model Context Protocol**: MCP server interface ready (`mcpserver.py` using `FastMCP`).
+
+---
 
 ## Project Structure
 
 ```text
 ├── app/
-│   ├── __init__.py
-│   ├── main.py                 # TechMindsForge FastAPI application entry point
-│   ├── core/
-│   │   ├── __init__.py
-│   │   ├── config.py           # Application configuration
-│   │   └── exceptions.py       # Custom exceptions
-│   ├── models/
-│   │   ├── __init__.py
-│   │   └── schemas.py          # Pydantic models
-│   ├── services/
-│   │   ├── __init__.py
-│   │   ├── file_service.py     # File handling logic
-│   │   └── conversion_service.py # Conversion logic
-│   └── api/
-│       ├── __init__.py
+│   ├── main.py                     # FastAPI application entry point
+│   ├── app_core/
+│   │   ├── config.py               # Pydantic Settings & Env configurations
+│   │   ├── exceptions.py           # Standardized custom application exceptions
+│   │   └── middleware.py           # Security headers and request timing middlewares
+│   ├── app_services/
+│   │   ├── agent_service.py        # LangGraph Agentic RAG Pipeline
+│   │   ├── rag_service.py          # YouTube video indexing & FAISS search service
+│   │   ├── youtube_service.py      # Metadata extraction & video downloading
+│   │   ├── file_service.py         # File utilities and automated cleanup
+│   │   └── s3_service.py           # AWS S3 Storage operations
+│   └── app_api/
 │       └── v1/
-│           ├── __init__.py
-│           ├── api.py          # API router
+│           ├── api.py              # Main API router binding
 │           └── endpoints/
-│               ├── __init__.py
-│               ├── health.py   # Health check endpoint
-│               └── conversion.py # Conversion endpoints
-├── tests/
-│   ├── __init__.py
-│   ├── test_main.py           # Main application tests
-│   └── test_services.py       # Service layer tests
-├── uploads/                   # Uploaded files (auto-created)
-├── outputs/                   # Converted files (auto-created)
-├── requirements.txt           # Python dependencies
-├── .env.example              # Environment variables template
-├── .gitignore               # Git ignore rules
-├── Dockerfile               # Docker configuration
-├── docker-compose.yml       # Docker Compose setup
-├── nginx.conf              # Nginx configuration
-└── README.md               # This file
+│               ├── youtube_tools.py # YouTube Extraction / Download endpoints
+│               └── rag_tools.py    # Agentic RAG Ingest / Query endpoints
+├── faiss_db/                       # Persisted FAISS vector stores (auto-created)
+├── uploads/                        # Upload cache folder (auto-created)
+├── outputs/                        # Download outputs folder (auto-created)
+├── pyproject.toml                  # Python build & dependency metadata (uv)
+├── requirements.txt                # Listed python packages
+├── start_app.py                    # Hot-reloaded startup runner script
+└── README.md                       # This documentation
 ```
+
+---
 
 ## Quick Start
 
-### 1. Clone and Setup
+### 1. Setup Virtual Environment
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-cd TechMindsForge.PythonFastAPI
+# Create virtual environment using uv
+uv venv
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Activate virtual environment
+# On Windows:
+.venv\Scripts\activate
+# On Linux/macOS:
+source .venv/bin/activate
 
-# Install dependencies
-pip install -r requirements.txt
+# Install dependencies using uv
+uv pip install -r requirements.txt
+
+# Or simply sync dependencies using uv sync (if using pyproject.toml / uv.lock)
+uv sync
 ```
 
-### 2. Environment Configuration
+### 2. Configure Environment
 
-```bash
-# Copy environment template
-cp .env.example .env
+Create a `.env` file in the root folder using `.env.example` as a template:
 
-# Edit .env file with your settings
-# For Windows users, update TESSERACT_PATH if needed
+```env
+# Server Configurations
+HOST=0.0.0.0
+PORT=8001
+DEBUG=True
+
+# Optional: YouTube API Key (needed to fetch nested replies for comments, 
+# otherwise defaults to basic metadata extraction)
+YOUTUBE_API_KEY=your-youtube-data-api-v3-key-here
+
+# Ollama Models & Base URL
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_LLM_MODEL=gemma4:latest          # LLM model for RAG queries
+OLLAMA_EMBED_MODEL=qwen3-embedding:latest # Embedding model for FAISS
+FAISS_PERSIST_DIR=faiss_db
 ```
 
-### 3. Install Tesseract OCR
+### 3. Run Ollama Locally
 
-**Windows:**
-
-```bash
-# Download and install Tesseract from:
-# https://github.com/UB-Mannheim/tesseract/wiki
-# Update TESSERACT_PATH in .env if needed
-```
-
-**Linux:**
+Ensure Ollama is installed and running locally, and pull the required models:
 
 ```bash
-sudo apt-get install tesseract-ocr tesseract-ocr-eng
-```
+# Pull the LLM model
+ollama pull gemma4:latest
 
-**macOS:**
-
-```bash
-brew install tesseract
+# Pull the embedding model
+ollama pull qwen3-embedding:latest
 ```
 
 ### 4. Run the Application
 
-```bash
-# Development mode
-python -m app.main
+Start the FastAPI application with hot reload enabled:
 
-# Or using uvicorn directly
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8001
+```bash
+python start_app.py
 ```
 
-### 5. Access the API
+### 5. Access the API & Docs
 
-- **API Documentation**: <http://127.0.0.1:8001/docs>
-- **ReDoc Documentation**: <http://127.0.0.1:8001/redoc>
-- **Health Check**: <http://127.0.0.1:8001/api/v1/health>
+- **Interactive Swagger Docs**: [Swagger Docs](http://127.0.0.1:8001/docs)
+- **ReDoc Documentation**: [ReDoc Docs](http://127.0.0.1:8001/redoc)
+- **Root Endpoint**: [Root API](http://127.0.0.1:8001/)
+
+---
 
 ## API Endpoints
 
-### Health Check
+### YouTube Tools
+
+#### 1. Extract Comprehensive Data
 
 ```http
-GET /api/v1/health
+POST /api/v1/youtubetools/extract-data
 ```
 
-## Docker Deployment
+Extracts metadata, transcripts, and comment threads from a YouTube URL.
 
-### Using Docker Compose (Recommended)
+#### 2. Download Video or Audio
 
-```bash
-# Build and run with Docker Compose
-docker-compose up --build
-
-# Run in background
-docker-compose up -d --build
+```http
+POST /api/v1/youtubetools/download
 ```
 
-### Using Docker directly
+Downloads video/audio locally using custom format (e.g. mp4, mp3) and quality profiles.
 
-```bash
-# Build the image
-docker build -t smart-convert-api .
+---
 
-# Run the container
-docker run -p 8001:8001 -v $(pwd)/uploads:/app/uploads -v $(pwd)/outputs:/app/outputs smart-convert-api
+### Agentic RAG Tools
+
+#### 1. Ingest Video Details
+
+```http
+POST /api/v1/ragtools/ingest
 ```
 
-## Testing
+Takes the extraction response from `/youtubetools/extract-data`, splits it into documents, generates embeddings, and saves a FAISS index locally.
 
-```bash
-# Run all tests
-pytest
+#### 2. Query Video Content
 
-# Run with coverage
-pytest --cov=app
-
-# Run specific test file
-pytest tests/test_main.py
+```http
+POST /api/v1/ragtools/query
 ```
 
-## Development
-
-### Code Quality
-
-```bash
-# Format code
-black app/ tests/
-
-# Sort imports
-isort app/ tests/
-
-# Lint code
-flake8 app/ tests/
-```
-
-### Adding New Features
-
-1. **New Endpoints**: Add to `app/api/v1/endpoints/`
-2. **New Services**: Add to `app/services/`
-3. **New Models**: Add to `app/models/schemas.py`
-4. **Configuration**: Update `app/core/config.py`
-
-## Configuration
-
-Key configuration options in `.env`:
-
-```env
-# Application
-APP_NAME=Smart Convert API
-DEBUG=False
-
-# File Upload
-MAX_FILE_SIZE=52428800  # 50MB
-UPLOAD_DIR=uploads
-OUTPUT_DIR=outputs
-
-# OCR
-TESSERACT_PATH=C:\Program Files\Tesseract-OCR\tesseract.exe
-```
-
-## Production Deployment
-
-1. **Environment Variables**: Set production values in `.env`
-2. **Security**: Configure CORS origins appropriately
-3. **File Storage**: Consider using cloud storage for uploads/outputs
-4. **Monitoring**: Add logging and monitoring solutions
-5. **SSL**: Configure HTTPS with reverse proxy
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Run quality checks
-6. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.
-
-## Support
-
-For issues and questions, please create an issue in the repository.
+Starts a LangGraph retrieval pipeline using local Ollama models to answer complex user questions relative to the video transcript and comments.

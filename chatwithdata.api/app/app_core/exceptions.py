@@ -2,23 +2,8 @@ from fastapi import HTTPException
 from typing import Any, Dict, Optional
 
 
-class SmartConvertException(Exception):
-    """Base exception for Smart Convert API."""
-    pass
-
-
-class FileProcessingError(SmartConvertException):
-    """Raised when file processing fails."""
-    pass
-
-
-class UnsupportedFileTypeError(SmartConvertException):
-    """Raised when an unsupported file type is uploaded."""
-    pass
-
-
-class FileSizeExceededError(SmartConvertException):
-    """Raised when uploaded file exceeds size limit."""
+class ChatWithDataException(Exception):
+    """Base exception for ChatWithData API."""
     pass
 
 
