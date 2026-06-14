@@ -1,34 +1,21 @@
 import logging
 from fastapi import APIRouter, Request, BackgroundTasks
-from pydantic import BaseModel, Field
 from typing import Optional
 from app.app_services.youtube_service import YouTubeService
 from app.app_services.file_service import FileService
 from app.app_core.exceptions import create_error_response
+from app.app_models.youtube_models import (
+    ExtractDataRequest, ExtractDataResponse, DownloadVideoRequest, DownloadVideoResponse
+)
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-# ── Request / Response schemas ─────────────────────────────────────────────────
-
-class ExtractDataRequest(BaseModel):
-    url: str = Field(..., description="The YouTube video URL")
-    fetch_comments: bool = Field(True, description="Whether to fetch video comments")
-    fetch_transcript: bool = Field(True, description="Whether to fetch video transcript")
-
-
-class DownloadVideoRequest(BaseModel):
-    url: str = Field(..., description="The YouTube video URL")
-    output_format: str = Field("mp4", description="Output format (e.g., mp4, mp3)")
-    quality: str = Field("best", description="Quality preset (e.g., best, worst)")
-    output_filename: Optional[str] = Field(None, description="Optional custom output filename")
-
-
 # ─────────────────────────────────────────────
 # 1. Extract comprehensive data
 # ─────────────────────────────────────────────
-@router.post("/extract-data")
+@router.post("/extract-data", response_model=ExtractDataResponse)
 async def extract_youtube_data(
     body: ExtractDataRequest,
     request: Request
@@ -54,7 +41,7 @@ async def extract_youtube_data(
 # ─────────────────────────────────────────────
 # 2. Download YouTube video / audio
 # ─────────────────────────────────────────────
-@router.post("/download")
+@router.post("/download", response_model=DownloadVideoResponse)
 async def download_youtube_video(
     body: DownloadVideoRequest,
     request: Request,

@@ -10,69 +10,15 @@ Endpoints:
 
 import logging
 from fastapi import APIRouter, Request
-from pydantic import BaseModel
-from typing import Optional, Dict, Any, List
-
 from app.app_services.rag_service import ingest_youtube_data, list_sessions, delete_session
 from app.app_services.agent_service import run_rag_query
 from app.app_core.exceptions import create_error_response
+from app.app_models.rag_models import (
+    IngestRequest, IngestResponse, QueryRequest, QueryResponse, SessionsResponse, DeleteSessionResponse
+)
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
-
-
-# ── Request / Response schemas ─────────────────────────────────────────────────
-
-class IngestRequest(BaseModel):
-    success: Optional[bool] = None
-    message: Optional[str] = None
-    data: Optional[Dict[str, Any]] = None
-    video_data: Optional[Dict[str, Any]] = None
-
-
-class IngestResponse(BaseModel):
-    success: bool
-    message: str
-    video_id: str
-    chunks_ingested: int
-    collection: str
-
-
-class QueryRequest(BaseModel):
-    video_id: str
-    question: str
-
-
-class SourceUsed(BaseModel):
-    source: str
-    snippet: str
-
-
-class QueryResponse(BaseModel):
-    success: bool
-    video_id: str
-    question: str
-    original_question: str
-    answer: str
-    sources_used: List[SourceUsed]
-    docs_retrieved: int
-
-
-class SessionInfo(BaseModel):
-    video_id: str
-    collection: str
-    status: str
-
-
-class SessionsResponse(BaseModel):
-    success: bool
-    sessions: List[SessionInfo]
-    total: int
-
-
-class DeleteSessionResponse(BaseModel):
-    success: bool
-    message: str
 
 
 # ── 1. Ingest ──────────────────────────────────────────────────────────────────
